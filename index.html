@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="SmedCover">
 <meta property="og:title" content="SmedCover · 封面做一次，尺寸全出齐" data-en-content="SmedCover · Design the cover once, get every size">
 <meta property="og:description" content="给自媒体批量做封面的桌面应用。品牌设好一次，之后每条视频只要选频道、写标题，所有平台要的尺寸一次出齐。免费开源。" data-en-content="A desktop app for branded video covers. Set up your brand once; then pick a channel, type the title and get every size each platform wants. Free and open source.">
-<meta property="og:image" content="assets/og/og.png">
+<meta property="og:image" content="assets/og/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="zh_CN">
@@ -104,7 +104,7 @@
         <span class="what"><span data-l="zh">给视频创作者的封面工具</span><span data-l="en" lang="en">Covers for video creators</span></span>
       </div>
       <h1 id="hero-h">
-        <span data-l="zh">封面做<em>一次</em>，<br>尺寸<em>全出齐</em>。</span>
+        <span data-l="zh"><span class="ln">封面做<em>一次</em>，</span><span class="ln">尺寸<em>全出齐</em>。</span></span>
         <span data-l="en" lang="en">Design it <em>once</em>.<br>Get <em>every size</em>.</span>
       </h1>
       <p class="lede">
@@ -122,6 +122,9 @@
           <span><span data-l="zh">免费</span><span data-l="en" lang="en">Free</span></span>
           <span><span data-l="zh">开源（AGPL-3.0）</span><span data-l="en" lang="en">Open source (AGPL-3.0)</span></span>
           <span>macOS / Windows / Linux</span>
+        </p>
+        <p class="credits" aria-label="适用平台" data-en-aria-label="Made for">
+          <span>BILIBILI</span><span>DOUYIN</span><span>XIAOHONGSHU</span><span>WECHAT</span><span>YOUTUBE</span>
         </p>
       </div>
     </div>
@@ -160,11 +163,6 @@
       </div>
     </div>
   </div>
-  <div class="wrap">
-    <p class="credits" aria-label="适用平台" data-en-aria-label="Made for">
-      <span>BILIBILI</span><span>DOUYIN</span><span>XIAOHONGSHU · RED</span><span>WECHAT CHANNELS</span><span>YOUTUBE</span><span>WECHAT ARTICLE</span>
-    </p>
-  </div>
 </section>
 
 <!-- ============ THE APP ============ -->
@@ -173,11 +171,12 @@
     <div class="tour-head">
       <div>
         <p class="tag"><span class="tag-ep">EP.00</span><span class="tag-name"><span data-l="zh">编辑器</span><span data-l="en" lang="en">The editor</span></span></p>
-        <h2 class="h2" id="tour-h"><span data-l="zh">只填文字，<em>样子交给风格</em>。</span><span data-l="en" lang="en">Just the words; <em>the look does the rest</em>.</span></h2>
+        <h2 class="h2" id="tour-h"><span data-l="zh"><span class="ph">只填文字，</span><span class="ph"><em>样子交给风格</em>。</span></span><span data-l="en" lang="en">Just the words; <em>the look does the rest</em>.</span></h2>
       </div>
       <p class="lede"><span data-l="zh">「内容」面板里只有频道、标题、副标题和角标。配色、版式、字效都由档案和风格决定，你只管这一期写什么。</span><span data-l="en" lang="en">The Content sheet asks for a channel, a title, a subtitle and a corner tag — nothing else. Colours, layout and lettering come from the profile and the look; you only say what this episode is about.</span></p>
     </div>
     <figure class="shot reveal">
+      <div class="shot-in">
       <div class="frame-img">
         <picture>
           <source type="image/avif" srcset="assets/img/ui/ui-editor-zh-2400.avif" data-en-srcset="assets/img/ui/ui-editor-en-2400.avif" media="(min-width: 700px)">
@@ -189,6 +188,7 @@
       <span class="callout" style="left:39%;top:87.4%" aria-hidden="true">3</span>
       <span class="callout" style="left:80.75%;top:94%" aria-hidden="true">4</span>
       <span class="callout" style="left:89%;top:8.4%" aria-hidden="true">5</span>
+      </div>
       <figcaption class="caption"><span data-l="zh">SmedCover 的编辑器（截图，示例档案 Pixel Harbor）。</span><span data-l="en" lang="en">SmedCover's editor (screenshot, with the sample profile Pixel Harbor).</span></figcaption>
     </figure>
     <ol class="legend">
@@ -207,7 +207,7 @@
     <div class="sizes-grid">
       <div>
         <p class="tag"><span class="tag-ep">EP.01</span><span class="tag-name"><span data-l="zh">尺寸</span><span data-l="en" lang="en">Sizes</span></span></p>
-        <h2 class="h2" id="sizes-h"><span data-l="zh">一张封面，<em>六个尺寸</em>。</span><span data-l="en" lang="en">One cover, <em>six sizes</em>.</span></h2>
+        <h2 class="h2" id="sizes-h"><span data-l="zh"><span class="ph">一张封面，</span><span class="ph"><em>六个尺寸</em>。</span></span><span data-l="en" lang="en">One cover, <em>six sizes</em>.</span></h2>
         <p class="lede"><span data-l="zh">横版、竖版、方形各有自己的版式：16:9 左右排，3:4 上下排，方形用细通栏。在一个尺寸上拖动、缩放，按「调整范围」带到其他尺寸；导出时，档案要的尺寸一次全部写出来。</span><span data-l="en" lang="en">Wide, tall and square each get a layout of their own — side by side at 16:9, stacked at 3:4, a slim banner on the square. Move or resize something on one size and <i>Applies to</i> carries it to the others; Export writes every size the profile wants in one go.</span></p>
 
         <div class="picker" id="picker">
@@ -275,7 +275,7 @@
 <section class="section" id="looks" aria-labelledby="looks-h">
   <div class="wrap">
     <p class="tag"><span class="tag-ep">EP.02</span><span class="tag-name"><span data-l="zh">风格</span><span data-l="en" lang="en">Looks</span></span></p>
-    <h2 class="h2" id="looks-h"><span data-l="zh"><em>35 种风格</em>，换一下就是另一张。</span><span data-l="en" lang="en"><em>35 looks</em>. Switch, and it's another cover.</span></h2>
+    <h2 class="h2" id="looks-h"><span data-l="zh"><span class="ph"><em>35 种风格</em>，</span><span class="ph">换一下就是另一张。</span></span><span data-l="en" lang="en"><em>35 looks</em>. Switch, and it's another cover.</span></h2>
     <p class="lede"><span data-l="zh">风格决定整张封面怎么画：背景、色块、标题和其他文字、频道图形一起换；内容、位置和图层都不变，随时切回来。下面每一张都是同一张封面，只换了风格。</span><span data-l="en" lang="en">A look decides how the whole cover is drawn — the ground, the colour block, the lettering and the channel graphic change together, while the words, places and layers stay put. Every picture below is the same cover in another look.</span></p>
 
     <div class="looks-top">
@@ -351,7 +351,7 @@
     <div class="deal-head">
       <div>
         <p class="tag"><span class="tag-ep">EP.03</span><span class="tag-name"><span data-l="zh">你看着办</span><span data-l="en" lang="en">Surprise me</span></span></p>
-        <h2 class="h2" id="deal-h"><span data-l="zh">没灵感？按<em>空格</em>。</span><span data-l="en" lang="en">Stuck? Press <em>Space</em>.</span></h2>
+        <h2 class="h2" id="deal-h"><span data-l="zh"><span class="ph">没灵感？</span><span class="ph">按<em>空格</em>。</span></span><span data-l="en" lang="en">Stuck? Press <em>Space</em>.</span></h2>
         <p class="lede"><span data-l="zh">「你看着办」把这张封面怎么画重新随机一遍：风格和它的滑条、深浅底、标题的文字效果和变形、你加的图层摆在哪……一次抽六手，每手一个不同的风格。点一手放到画布上；不满意就再抽，或者撤销回去。</span><span data-l="en" lang="en">Surprise me re-deals how the cover is drawn — the look and its sliders, the ground, the title's lettering and bend, where your own layers sit. It deals six hands at once, each in a different look; click one to put it on the canvas, deal again, or undo.</span></p>
       </div>
       <div class="space-key" aria-hidden="true">SPACE<small>空格</small></div>
@@ -378,7 +378,7 @@
 <section class="section" id="lettering" aria-labelledby="letters-h">
   <div class="wrap">
     <p class="tag"><span class="tag-ep">EP.04</span><span class="tag-name"><span data-l="zh">字</span><span data-l="en" lang="en">Lettering</span></span></p>
-    <h2 class="h2" id="letters-h"><span data-l="zh">中文标题，按<em>中文的规矩</em>排。</span><span data-l="en" lang="en">Chinese titles, set by <em>Chinese rules</em>.</span></h2>
+    <h2 class="h2" id="letters-h"><span data-l="zh"><span class="ph">中文标题，</span><span class="ph">按<em>中文的规矩</em>排。</span></span><span data-l="en" lang="en">Chinese titles, set by <em>Chinese rules</em>.</span></h2>
     <p class="lede"><span data-l="zh">每一行按中文标题的排版规矩来：挨着汉字的西文和数字放大到和汉字一样高，标点按「开明式」挤压，行首行尾的标点不留空白。标题、副标题和你加的文字，都能单独换文字效果，再叠一种变形。</span><span data-l="en" lang="en">Each line is set the way Chinese titles are: Latin letters and numerals beside the hanzi scaled to stand as tall, punctuation squeezed in the Kaiming style, no blank space at either end of a line. The title, subtitle and any text you add can each take their own text effect, with a bend on top.</span></p>
     <div class="letters">
       <div>
@@ -423,7 +423,7 @@
     </figure>
     <div>
       <p class="tag"><span class="tag-ep">EP.05</span><span class="tag-name"><span data-l="zh">照片</span><span data-l="en" lang="en">Photos</span></span></p>
-      <h2 class="h2" id="photos-h"><span data-l="zh">抠出主体，<em>让它挡住标题</em>。</span><span data-l="en" lang="en">Cut out the subject; <em>let it cross the title</em>.</span></h2>
+      <h2 class="h2" id="photos-h"><span data-l="zh"><span class="ph">抠出主体，</span><span class="ph"><em>让它挡住标题</em>。</span></span><span data-l="en" lang="en">Cut out the subject; <em>let it cross the title</em>.</span></h2>
       <p class="lede"><span data-l="zh">抠出的主体自动放在标题上面，像杂志封面那样挡住一部分字；再逐字或用画笔决定哪些字在前、哪些在后。抠图在本机完成，照片不上传。</span><span data-l="en" lang="en">A cut-out lands above the title, covering part of it the way a magazine cover does — then choose letter by letter, or with a brush, which parts pass in front. Cutting out runs on your computer; the photo is never uploaded.</span></p>
       <ul class="feature-list" role="list">
         <li><span><b><span data-l="zh">本机抠图</span><span data-l="en" lang="en">On-device cut-out</span></b> · <span data-l="zh">Mac 上用系统自带的 Apple Vision（macOS 14 及以上），通常一秒内；Windows 和 Linux 用开源模型 BiRefNet，第一次用前下载一次。</span><span data-l="en" lang="en">Apple Vision on a Mac (macOS 14 and later), usually under a second; the open BiRefNet model on Windows and Linux, downloaded once before first use.</span></span></li>
@@ -440,7 +440,7 @@
 <section class="section" id="channels" aria-labelledby="channels-h">
   <div class="wrap">
     <p class="tag"><span class="tag-ep">EP.06</span><span class="tag-name"><span data-l="zh">频道与批量</span><span data-l="en" lang="en">Channels and batches</span></span></p>
-    <h2 class="h2" id="channels-h"><span data-l="zh">每个栏目一种颜色，<em>一张表出一整批</em>。</span><span data-l="en" lang="en">A colour for every series, <em>a whole batch from one sheet</em>.</span></h2>
+    <h2 class="h2" id="channels-h"><span data-l="zh"><span class="ph">每个栏目一种颜色，</span><span class="ph"><em>一张表出一整批</em>。</span></span><span data-l="en" lang="en">A colour for every series, <em>a whole batch from one sheet</em>.</span></h2>
     <p class="lede"><span data-l="zh">档案是一个品牌的全部设置：品牌名、频道、尺寸和一套默认设计，可以存好几套。频道是品牌下的栏目，有自己的名称、主色和图形；每个频道有自己的那张封面，互不影响。</span><span data-l="en" lang="en">A profile holds a brand — its name, channels, sizes and a default design — and you can keep several. A channel is a series under it, with its own name, colour and graphic, and its own cover, untouched by the others.</span></p>
     <div class="batch">
       <div>
@@ -480,7 +480,7 @@
 <section class="section" id="agents" aria-labelledby="agents-h">
   <div class="wrap">
     <p class="tag"><span class="tag-ep">EP.07</span><span class="tag-name"><span data-l="zh">Agent 与命令行</span><span data-l="en" lang="en">Agents and the command line</span></span></p>
-    <h2 class="h2" id="agents-h"><span data-l="zh">让 <em>Claude Code</em> 替你做封面。</span><span data-l="en" lang="en">Let <em>Claude Code</em> make the cover.</span></h2>
+    <h2 class="h2" id="agents-h"><span data-l="zh"><span class="ph">让 <em>Claude Code</em></span> <span class="ph">替你做封面。</span></span><span data-l="en" lang="en">Let <em>Claude Code</em> make the cover.</span></h2>
     <p class="lede"><span data-l="zh">桌面应用可以开一个 MCP 接口，Claude Code、Codex、Cursor 这类 agent 连进来，就在你开着的窗口里改文字、换风格、摆图层、出预览、导出。每一处改动你都看得到，每一处都是一步撤销。</span><span data-l="en" lang="en">The desktop app can open an MCP endpoint; agents such as Claude Code, Codex or Cursor connect and work in the window you have open — changing words and looks, placing layers, drawing previews, exporting. You see every change, and each is one step of undo.</span></p>
     <div class="agents-grid">
       <div class="term">
@@ -515,7 +515,7 @@
   <div class="wrap releases-grid">
     <div class="releases-side">
       <p class="tag"><span class="tag-ep">NEW</span><span class="tag-name"><span data-l="zh">发布</span><span data-l="en" lang="en">Releases</span></span></p>
-      <h2 class="h2" id="rel-h"><span data-l="zh">每一版<em>改了什么</em>。</span><span data-l="en" lang="en">What <em>changed</em>, release by release.</span></h2>
+      <h2 class="h2" id="rel-h"><span data-l="zh"><span class="ph">每一版</span><span class="ph"><em>改了什么</em>。</span></span><span data-l="en" lang="en">What <em>changed</em>, release by release.</span></h2>
       <p class="note" id="rel-source"></p>
       <p class="note"><a href="https://github.com/cybertheye/smedcover/releases" rel="noopener"><span data-l="zh">GitHub 上的全部发布</span><span data-l="en" lang="en">All releases on GitHub</span></a> · <a href="https://github.com/cybertheye/smedcover/releases.atom" rel="noopener"><span data-l="zh">订阅（Atom）</span><span data-l="en" lang="en">Subscribe (Atom)</span></a></p>
     </div>

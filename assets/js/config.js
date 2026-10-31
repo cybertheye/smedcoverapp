@@ -4,7 +4,8 @@
  * The download mirror for mainland China, as a bare host name ("dl.example.com"), or "" for none.
  * When set, the page reads https://<DL_HOST>/latest.json (the Tauri updater manifest) and offers
  * "国内镜像 / GitHub" as the download source; installers are expected at
- * https://<DL_HOST>/v<version>/<the file name GitHub uses>.
+ * https://<DL_HOST>/v<version>/<the file name GitHub uses>. A full origin ("https://dl.example.com:8443")
+ * works too. The mirror must send `Access-Control-Allow-Origin` for latest.json (see README).
  */
 export const DL_HOST = "";
 

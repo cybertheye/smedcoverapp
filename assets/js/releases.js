@@ -32,7 +32,9 @@ export function expectedAssets(v) {
   ].map((name) => ({ name, size: null, url: `https://github.com/${REPO}/releases/download/v${v}/${name}` }));
 }
 
-export const mirrorUrl = (version, name) => `https://${DL_HOST}/v${version}/${encodeURIComponent(name)}`;
+/** The mirror's base URL: DL_HOST as a host name ("dl.example.com" → https://dl.example.com), or a full origin as given. */
+export const mirrorBase = () => (/^https?:\/\//.test(DL_HOST) ? DL_HOST : `https://${DL_HOST}`).replace(/\/+$/, "");
+export const mirrorUrl = (version, name) => `${mirrorBase()}/v${version}/${encodeURIComponent(name)}`;
 
 /** "0.10.2" > "0.9.9" */
 export function cmpVersion(a, b) {
@@ -132,7 +134,7 @@ export function loadReleases(onChange) {
 
   getJson(STATIC_RELEASES).then((d) => { got.static = d; }).catch(() => {}).finally(() => finish("static"));
   getJson(NOTES_ZH).then((d) => { got.notesZh = d || {}; }).catch(() => {}).finally(() => finish("notes"));
-  if (DL_HOST) getJson(`https://${DL_HOST}/latest.json`).then((d) => { got.mirror = d; }).catch(() => { got.mirror = false; }).finally(() => finish("mirror"));
+  if (DL_HOST) getJson(`${mirrorBase()}/latest.json`).then((d) => { got.mirror = d; }).catch(() => { got.mirror = false; }).finally(() => finish("mirror"));
 
   const fresh = got.cache && Date.now() - got.cache.t < CACHE_TTL;
   if (fresh) finish("github");

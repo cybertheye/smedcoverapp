@@ -44,7 +44,8 @@ const releases = raw
 let latest = null;
 if (process.env.DL_HOST) {
   try {
-    latest = await getJson(`https://${process.env.DL_HOST}/latest.json`);
+    const h = process.env.DL_HOST;
+    latest = await getJson(`${/^https?:\/\//.test(h) ? h.replace(/\/+$/, "") : `https://${h}`}/latest.json`);
   } catch (e) {
     console.warn(`mirror: ${e.message} (left out)`);
   }
