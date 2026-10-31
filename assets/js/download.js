@@ -125,7 +125,7 @@ export function createDownloads(els) {
     }
     const prim = primary(false);
     if (prim) {
-      els.primary.innerHTML = `<div class="dl-buttons">${prim}</div><p class="dl-file mono">${esc(files()[mainKind()]?.name || "")}</p>`
+      els.primary.innerHTML = `<div class="dl-buttons">${prim}</div>${files()[mainKind()] ? `<p class="dl-file mono">${esc(files()[mainKind()].name)}</p>` : ""}`
         + `<p class="dl-hint">${both(...pair("dl.meta", { v: r.version, date: fmtDate(r.date, "zh") }, { v: r.version, date: fmtDate(r.date, "en") }))} · <a href="#releases">${both(...pair("dl.whatsnew"))}</a></p>`;
     }
     const heroPrim = primary(true);
@@ -144,7 +144,7 @@ export function createDownloads(els) {
     }
     applyLang(els.root);
   }
-  const mainKind = () => ({ mac: sys.arch === "x86" ? "mac-x64" : "mac-arm", win: "win-setup", linux: "linux-appimage" }[sys.os] || "");
+  const mainKind = () => ({ mac: sys.arch === "x86" ? "mac-x64" : sys.arch === "arm" ? "mac-arm" : "", win: "win-setup", linux: "linux-appimage" }[sys.os] || "");
 
   return {
     async init() {
