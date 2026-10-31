@@ -249,10 +249,19 @@ html[data-lang="en"] .hero h1 em { text-shadow: .035em .035em 0 var(--em-shadow)
   font: 400 15px/1.2 var(--display); letter-spacing: .14em; color: var(--text-3); }
 
 @media (max-width: 900px) {
-  .hero-grid { grid-template-columns: minmax(0, 1fr); }
+  .hero-grid { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+  .hero-copy { display: contents; }      /* its parts join the grid, so the cover comes right after the words */
+  .hero-brandrow, .hero h1, .hero .lede { order: 0; }
+  .reflow { margin-top: 30px; }
+  .hero-cta-wrap { margin-top: 10px; }
   .ratio-big { display: none; }
-  .hero-block { top: auto; bottom: 0; height: calc(min(92vw, 470px) + 150px); width: 78%; }
-  .hero-copy { order: 0; }
+  .hero-block { display: none; }
+  /* the slanted block moves behind the cover */
+  .reflow::before { content: ""; position: absolute; z-index: -1; top: 6%; bottom: -10px; left: 22%; right: calc(-1 * var(--gutter));
+    background: radial-gradient(circle at center, rgba(11, 11, 17, .18) 1.6px, transparent 2px) 0 0 / 11px 11px, #fcee0a;
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%); }
+  .reflow::after { content: ""; position: absolute; z-index: -1; top: 6%; bottom: -10px; left: calc(22% - 14px); right: calc(-1 * var(--gutter) + 14px);
+    background: var(--rule); clip-path: polygon(30% 0, calc(30% + 3px) 0, 3px 100%, 0 100%); }
   .reflow { order: 1; }
   .hero-cta-wrap { order: 2; }
   .stage { height: min(92vw, 470px); }
@@ -438,8 +447,8 @@ html[data-lang="en"] .hero h1 em { text-shadow: .035em .035em 0 var(--em-shadow)
 
 /* ---------- EP.07 agents ---------- */
 .agents-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; margin-top: clamp(32px, 4vw, 52px); }
-.agents-grid .term pre { white-space: pre-wrap; word-break: break-all; }
-.agents-grid .term .say { word-break: normal; }
+.agents-grid .term pre { white-space: pre; }
+.agents-grid .term .say, .agents-grid .term .c { white-space: pre-wrap; }
 .soon { display: inline-block; margin-left: 8px; padding: 1px 7px; border-radius: 999px; background: var(--acc); color: var(--ink); font: 700 11px/1.6 var(--sans); letter-spacing: .04em; vertical-align: 2px; }
 .points { margin-top: 30px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 28px; padding: 0; list-style: none; }
 .points li { border-top: 2px solid var(--text); padding-top: 12px; font-size: 15px; color: var(--text-2); }
