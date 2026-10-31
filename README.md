@@ -96,7 +96,7 @@ git add data/releases.json && git commit -m "releases: v0.6.0"
   python3 -c "import re,hashlib,base64;s=open('index.html').read();m=re.search(r'<script>(.*?)</script>',s,re.S);print(base64.b64encode(hashlib.sha256(m.group(1).encode()).digest()).decode())"
   ```
 
-- **GitHub Pages**：直接发布仓库根目录即可（已放 `.nojekyll`）；所有路径都是相对路径，放在子路径下也能用。
+- **GitHub Pages**：直接发布仓库根目录即可（已放 `.nojekyll`）；主页的路径都是相对路径，放在子路径下也能用。`404.html` 用的是从根开始的路径（`/assets/…`），只有放在域名根下时样式才完整。
 - 域名定下来以后：在 `index.html` 的 `<head>` 里加 `<link rel="canonical">`，把 `og:image` 改成完整网址（微信、微博等抓取分享图需要绝对地址），并加上 `og:url`。
 
 ## 图片从哪里来

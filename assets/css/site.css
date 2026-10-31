@@ -409,7 +409,7 @@ html[data-lang="en"] .hero h1 { font-size: clamp(42px, 5.9vw, 88px); letter-spac
 .feature-list li b { color: var(--text); }
 .feature-list li::before { content: ""; width: 14px; height: 14px; margin-top: .45em; background: var(--acc); transform: skewX(-14deg); box-shadow: 3px 3px 0 var(--rule); }
 .byo { margin-top: 22px; padding: 14px 16px; border-left: 3px solid var(--acc); background: var(--surface); font-size: 14px; color: var(--text-2); border-radius: 0 10px 10px 0; }
-@media (max-width: 900px) { .split, .split.rev { grid-template-columns: minmax(0, 1fr); } .split.rev > :first-child { order: 2; } }
+@media (max-width: 900px) { .split, .split.rev { grid-template-columns: minmax(0, 1fr); } .split > figure { order: 2; } }
 
 /* ---------- EP.06 channels & batch ---------- */
 .batch { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(28px, 5vw, 64px); margin-top: clamp(32px, 4vw, 52px); align-items: start; }
