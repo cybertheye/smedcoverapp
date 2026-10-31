@@ -43,6 +43,7 @@ scripts/fetch-releases.mjs 重新生成 data/releases.json
 scripts/encode-images.sh   把原始 PNG 渲染图转成页面用的 WebP/AVIF
 scripts/capture/           生成封面渲染图、OG 图用的脚本
 nginx/smedcover-page.conf  nginx 配置示例
+.github/workflows/pages.yml 发布到 GitHub Pages
 ```
 
 ## 配置：`assets/js/config.js`
@@ -84,20 +85,23 @@ git add data/releases.json && git commit -m "releases: v0.6.0"
 
 然后在 `data/notes-zh.json` 里加这一版的中文摘要（`summary` 一段、`highlights` 几条，Markdown）。没有中文摘要的版本，中文页面显示英文原文；完整的英文更新说明始终可以在「完整更新说明」里展开。发布说明里的截图（GitHub 的 user-attachments 只在 GitHub 页面上能加载）显示为「截图（在 GitHub 上看）」链接。
 
-也可以把 `fetch-releases.mjs` 放进定时任务或 GitHub Actions，在发布后自动更新静态副本。
+GitHub Pages 上的那份不用等这一步：发布工作流每次运行（包括每天一次的定时运行）都会先跑一遍 `fetch-releases.mjs`，所以发新版后最晚一天，线上的静态副本就会更新。提交进仓库的这份是给 nginx 部署和工作流取不到数据时兜底用的。
 
 「命令行」卡片上的「即将推出」标记（`data-since="0.5.0"`）会在最新版本达到 0.5.0 以后自动消失。
 
 ## 部署
 
-- **nginx**：见 `nginx/smedcover-page.conf`。要点：gzip（有 ngx_brotli 就加 brotli）；HTML、CSS、JS、`data/*.json` 用 `Cache-Control: no-cache`（每次用 ETag 校验，没变就是 304）；图片和字体缓存 30 天。文件名没有内容哈希，所以**替换图片时请换个文件名**，或者把图片的缓存时间调短。配置里还有一条 CSP，其中 `<head>` 里那段内联脚本按哈希放行：改了这段脚本，就用下面的命令重算哈希替换进去。
+- **nginx**：见 `nginx/smedcover-page.conf`。要点：gzip（有 ngx_brotli 就加 brotli）；HTML、CSS、JS、`data/*.json` 用 `Cache-Control: no-cache`（每次用 ETag 校验，没变就是 304）；图片和字体缓存 30 天。文件名没有内容哈希，所以**替换图片时请换个文件名**，或者把图片的缓存时间调短。配置里还有一条 CSP，`index.html` 和 `404.html` 的 `<head>` 里各有一段内联脚本，按哈希放行：改了哪段，就用下面的命令重算那个文件的哈希替换进去。
 
   ```bash
-  python3 -c "import re,hashlib,base64;s=open('index.html').read();m=re.search(r'<script>(.*?)</script>',s,re.S);print(base64.b64encode(hashlib.sha256(m.group(1).encode()).digest()).decode())"
+  python3 -c "import re,hashlib,base64,sys;s=open(sys.argv[1]).read();m=re.search(r'<script>(.*?)</script>',s,re.S);print(base64.b64encode(hashlib.sha256(m.group(1).encode()).digest()).decode())" index.html   # 或 404.html
   ```
 
-- **GitHub Pages**：直接发布仓库根目录即可（已放 `.nojekyll`）；主页的路径都是相对路径，放在子路径下也能用。`404.html` 用的是从根开始的路径（`/assets/…`），只有放在域名根下时样式才完整。
-- 域名定下来以后：在 `index.html` 的 `<head>` 里加 `<link rel="canonical">`，把 `og:image` 改成完整网址（微信、微博等抓取分享图需要绝对地址），并加上 `og:url`。
+- **GitHub Pages**（现在用的）：仓库 [cybertheye/smedcoverapp](https://github.com/cybertheye/smedcoverapp)，网址 **https://www.cybertheye.com/smedcoverapp/**。路径就是仓库名，域名是用户站点 `cybertheye.github.io` 绑的 `www.cybertheye.com`，这个仓库自己不用放 CNAME。由 `.github/workflows/pages.yml` 发布（Settings → Pages → Source 设为 GitHub Actions）：推到 `main` 就发布，每天定时发布一次，也可以手动运行 `gh workflow run pages.yml`。只发布页面要用的文件，`scripts/`、`nginx/`、README 不会出现在网站上。
+  - 主页用的都是相对路径，放在哪个路径下都能用。`404.html` 要在任意深的地址上显示，所以它开头有一段脚本，在 `/smedcoverapp/` 下就从这里开始找文件，其它情况从根开始。**仓库改名的话，要同时改这里、`index.html` 里的 canonical / `og:url` / `og:image`，以及 `pages.yml` 开头的注释。**
+  - GitHub Pages 不能设响应头：nginx 配置里的 CSP 和缓存规则在这里都不生效。GitHub 自己的缓存是 10 分钟，所以推上去以后最多等 10 分钟就能看到新页面。
+  - 公开仓库连续 60 天没有提交的话，GitHub 会停掉定时运行，到 Actions 页面里重新启用就行。
+- `index.html` 里的 canonical、`og:url` 和 `og:image` 写的都是 GitHub Pages 的完整网址（微信、微博等抓取分享图需要绝对地址）。以后换了域名，记得一起改。
 
 ## 图片从哪里来
 

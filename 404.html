@@ -6,8 +6,17 @@
 <title>404 · SmedCover</title>
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="dark light">
-<link rel="icon" href="/assets/icons/favicon.ico" sizes="48x48">
-<link rel="stylesheet" href="/assets/css/site.css">
+<script>
+  // This page answers for any missing address, however deep, so its links start from the site's own folder:
+  // /smedcoverapp/ on GitHub Pages (the repository's name), the root anywhere else (nginx).
+  (function () {
+    var b = document.createElement("base");
+    b.href = /^\/smedcoverapp(\/|$)/.test(location.pathname) ? "/smedcoverapp/" : "/";
+    document.head.appendChild(b);
+  })();
+</script>
+<link rel="icon" href="assets/icons/favicon.ico" sizes="48x48">
+<link rel="stylesheet" href="assets/css/site.css">
 <style>
   .nf { min-height: 100vh; display: grid; align-content: center; }
   .nf .h2 { margin-top: 8px; }
@@ -26,7 +35,7 @@
     <p class="big" aria-hidden="true">404</p>
     <h1 class="h2">这一页没找到。<br><span lang="en">This page isn't here.</span></h1>
     <p>链接可能写错了，或者页面已经挪走。<span lang="en">The link may be mistyped, or the page has moved.</span></p>
-    <a class="btn" href="/">回到首页 · Home</a>
+    <a class="btn" href="./">回到首页 · Home</a>
   </div>
 </main>
 </body>

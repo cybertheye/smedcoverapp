@@ -1,0 +1,54 @@
+# Publishes the page on GitHub Pages: https://www.cybertheye.com/smedcoverapp/
+# (the repository's name is the path; www.cybertheye.com is the custom domain of cybertheye.github.io).
+#
+#   - every push to main;
+#   - once a day, so data/releases.json — the copy the page falls back on when GitHub's API can't be reached —
+#     picks up a new SmedCover release without a commit here (the published copy is fetched fresh at each run;
+#     the committed one stays the fallback should that fetch fail);
+#   - by hand: gh workflow run pages.yml (or Actions → Pages → Run workflow).
+#
+# Only what the page needs is published: not scripts/, nginx/ or the README.
+# One-time setup, already done: Settings → Pages → Source: GitHub Actions.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "23 1 * * *" # 09:23 in China
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Refresh data/releases.json
+        run: node scripts/fetch-releases.mjs || echo "::warning::GitHub's releases could not be read; publishing the committed data/releases.json"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Collect the page's files
+        run: |
+          mkdir _site
+          cp -R index.html 404.html site.webmanifest robots.txt assets data _site/
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v5
