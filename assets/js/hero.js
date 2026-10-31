@@ -2,7 +2,7 @@
 // the next while that size's real export fades in (cropped by the frame until it gets there). It moves on by
 // itself only while it is on screen, the tab is visible, nobody is pointing at or tabbing through it, and
 // the visitor hasn't asked for less motion; the pause button and the size buttons hand control over.
-import { both, pair, setBoth } from "./i18n.js";
+import { both, pair } from "./i18n.js";
 
 const RATIO = { "16:9": 16 / 9, "4:3": 4 / 3, "1:1": 1, "3:4": 3 / 4, "9:16": 9 / 16, "2.35:1": 2.35 };
 const PX = { "16:9": "1920×1080", "4:3": "1600×1200", "1:1": "1200×1200", "3:4": "1200×1600", "9:16": "1080×1920", "2.35:1": "900×383" };
@@ -18,7 +18,7 @@ function load(pic) {
     img.src = img.dataset.src;
     img.removeAttribute("data-src");
   }
-  if (img.complete && img.naturalWidth) return Promise.resolve();
+  if (img.complete) return Promise.resolve();   // loaded, or already failed (its events are gone)
   return new Promise((ok) => { img.addEventListener("load", ok, { once: true }); img.addEventListener("error", ok, { once: true }); });
 }
 
@@ -78,8 +78,7 @@ export function initHero() {
 
   function setPaused(p) {
     userPaused = p;
-    play.setAttribute("aria-pressed", String(p));
-    setBoth(play, "aria-label", ...pair(p ? "reflow.play" : "reflow.pause"));
+    play.setAttribute("aria-pressed", String(!p));   // "Autoplay", pressed while it runs
     schedule();
   }
 
@@ -87,7 +86,9 @@ export function initHero() {
   play.addEventListener("click", () => setPaused(!userPaused));
   root.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") { hovering = true; clearTimeout(timer); } });
   root.addEventListener("pointerleave", () => { hovering = false; schedule(); });
-  root.addEventListener("focusin", () => { focused = true; clearTimeout(timer); });
+  // keyboard focus holds the slideshow still; the focus a click leaves on a button does not
+  const keyboardFocus = (el) => { try { return el.matches(":focus-visible"); } catch (err) { return true; } };
+  root.addEventListener("focusin", (e) => { if (keyboardFocus(e.target)) { focused = true; clearTimeout(timer); } });
   root.addEventListener("focusout", (e) => { if (!root.contains(e.relatedTarget)) { focused = false; schedule(); } });
   document.addEventListener("visibilitychange", schedule);
   

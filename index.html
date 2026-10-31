@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title data-en-text="SmedCover · Design the cover once, get every size">SmedCover · 封面做一次，尺寸全出齐</title>
-<meta name="description" content="SmedCover 是给自媒体批量做封面的桌面应用：品牌设好一次，每条视频选频道、写标题，B站、抖音、小红书、视频号、YouTube、公众号要的尺寸一次出齐。35 种风格、抠图穿插、批量导出，还能让 Claude Code 这类 AI agent 来做。免费开源，支持 macOS、Windows、Linux。" data-en-content="SmedCover is a desktop app for branded video covers: set up your brand once, then pick a channel and type the title to get every size Bilibili, Douyin, RED, WeChat and YouTube ask for. 35 looks, cut-outs, batch export, and AI agents such as Claude Code. Free and open source for macOS, Windows and Linux.">
+<meta name="description" content="SmedCover 是给自媒体批量做封面的桌面应用：品牌设好一次，每条视频选频道、写标题，B站、抖音、小红书、视频号、YouTube、公众号要的尺寸一次出齐。35 种风格、抠图穿插、批量导出，还能让 Claude Code 这类 AI agent 来做。免费开源，支持 macOS、Windows、Linux。" data-en-content="SmedCover is a desktop app for branded video covers: set up your brand once, then pick a channel and type the title to get every size Bilibili, Douyin, RED, WeChat Channels, WeChat articles and YouTube ask for. 35 looks, cut-outs, batch export, and AI agents such as Claude Code. Free and open source for macOS, Windows and Linux.">
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#0b0b11" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f2eee4" media="(prefers-color-scheme: light)">
@@ -24,7 +24,7 @@
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/bebas-neue.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="assets/img/hero/cel-16x9-sm.webp" imagesrcset="assets/img/hero/cel-16x9-sm.webp 900w, assets/img/hero/cel-16x9-lg.webp 1800w" imagesizes="(max-width: 900px) 92vw, 44vw" fetchpriority="high">
+<link rel="preload" as="image" type="image/avif" href="assets/img/hero/cel-16x9-lg.avif" fetchpriority="high">
 <link rel="modulepreload" href="assets/js/main.js">
 <link rel="modulepreload" href="assets/js/config.js">
 <link rel="modulepreload" href="assets/js/i18n.js">
@@ -109,7 +109,7 @@
       </h1>
       <p class="lede">
         <span data-l="zh">给自媒体批量做封面的桌面应用。品牌设好一次，之后每条视频只要选频道、写标题——B站、抖音、小红书、视频号、YouTube、公众号要的尺寸，一次全出来。</span>
-        <span data-l="en" lang="en">A desktop app for branded video covers. Set up your brand once; then, for every video, pick a channel and type the title — and get the cover at every size Bilibili, Douyin, RED, WeChat and YouTube ask for, all at once.</span>
+        <span data-l="en" lang="en">A desktop app for branded video covers. Set up your brand once; then, for every video, pick a channel and type the title — and get the cover at every size Bilibili, Douyin, RED, WeChat Channels, WeChat articles and YouTube ask for, all at once.</span>
       </p>
       <div class="hero-cta-wrap">
         <div class="hero-cta">
@@ -120,10 +120,10 @@
         </div>
         <p class="hero-meta">
           <span><span data-l="zh">免费</span><span data-l="en" lang="en">Free</span></span>
-          <span><span data-l="zh">开源（AGPL-3.0）</span><span data-l="en" lang="en">Open source (AGPL-3.0)</span></span>
+          <span><span data-l="zh">开源（AGPL-3.0-or-later）</span><span data-l="en" lang="en">Open source (AGPL-3.0-or-later)</span></span>
           <span>macOS / Windows / Linux</span>
         </p>
-        <p class="credits" aria-label="适用平台" data-en-aria-label="Made for">
+        <p class="credits">
           <span>BILIBILI</span><span>DOUYIN</span><span>XIAOHONGSHU</span><span>WECHAT</span><span>YOUTUBE</span>
         </p>
       </div>
@@ -135,11 +135,11 @@
           <span class="ratio-big" id="ratio-big" aria-hidden="true">16:9</span>
           <div class="pic" id="frame-pic">
             <picture data-ratio="16:9"><source type="image/avif" srcset="assets/img/hero/cel-16x9-lg.avif"><img class="on" src="assets/img/hero/cel-16x9-sm.webp" srcset="assets/img/hero/cel-16x9-sm.webp 900w, assets/img/hero/cel-16x9-lg.webp 1800w" sizes="(max-width: 900px) 92vw, 44vw" width="1800" height="1013" fetchpriority="high" decoding="async" alt="SmedCover 导出的 16:9 封面：标题「雨夜东京漫步」，赛璐珞风格" data-en-alt="A 16:9 cover exported by SmedCover: the title 雨夜东京漫步 (Rainy Tokyo night walk), in the Cel look"></picture>
-            <picture data-ratio="4:3"><source type="image/avif" data-srcset="assets/img/hero/cel-4x3-lg.avif"><img data-src="assets/img/hero/cel-4x3-sm.webp" data-srcset="assets/img/hero/cel-4x3-sm.webp 900w, assets/img/hero/cel-4x3-lg.webp 1800w" sizes="(max-width: 900px) 92vw, 44vw" width="1800" height="1350" decoding="async" alt="同一张封面的 4:3 版本" data-en-alt="The same cover at 4:3"></picture>
-            <picture data-ratio="1:1"><source type="image/avif" data-srcset="assets/img/hero/cel-1x1-lg.avif"><img data-src="assets/img/hero/cel-1x1-sm.webp" data-srcset="assets/img/hero/cel-1x1-sm.webp 900w, assets/img/hero/cel-1x1-lg.webp 1800w" sizes="(max-width: 900px) 80vw, 36vw" width="1800" height="1800" decoding="async" alt="同一张封面的 1:1 版本" data-en-alt="The same cover at 1:1"></picture>
-            <picture data-ratio="3:4"><source type="image/avif" data-srcset="assets/img/hero/cel-3x4-lg.avif"><img data-src="assets/img/hero/cel-3x4-sm.webp" data-srcset="assets/img/hero/cel-3x4-sm.webp 675w, assets/img/hero/cel-3x4-lg.webp 1350w" sizes="(max-width: 900px) 70vw, 28vw" width="1350" height="1800" decoding="async" alt="同一张封面的 3:4 版本" data-en-alt="The same cover at 3:4"></picture>
-            <picture data-ratio="9:16"><source type="image/avif" data-srcset="assets/img/hero/cel-9x16-lg.avif"><img data-src="assets/img/hero/cel-9x16-sm.webp" data-srcset="assets/img/hero/cel-9x16-sm.webp 506w, assets/img/hero/cel-9x16-lg.webp 1012w" sizes="(max-width: 900px) 52vw, 22vw" width="1012" height="1800" decoding="async" alt="同一张封面的 9:16 版本" data-en-alt="The same cover at 9:16"></picture>
-            <picture data-ratio="2.35:1"><source type="image/avif" data-srcset="assets/img/hero/cel-2.35x1-lg.avif"><img data-src="assets/img/hero/cel-2.35x1-sm.webp" data-srcset="assets/img/hero/cel-2.35x1-sm.webp 900w, assets/img/hero/cel-2.35x1-lg.webp 1800w" sizes="(max-width: 900px) 92vw, 44vw" width="1800" height="766" decoding="async" alt="同一张封面的 2.35:1 版本" data-en-alt="The same cover at 2.35:1"></picture>
+            <picture data-ratio="4:3"><source type="image/avif" data-srcset="assets/img/hero/cel-4x3-lg.avif"><img aria-hidden="true" data-src="assets/img/hero/cel-4x3-sm.webp" data-srcset="assets/img/hero/cel-4x3-sm.webp 900w, assets/img/hero/cel-4x3-lg.webp 1800w" sizes="(max-width: 900px) 92vw, 44vw" width="1800" height="1350" decoding="async" alt="同一张封面的 4:3 版本" data-en-alt="The same cover at 4:3"></picture>
+            <picture data-ratio="1:1"><source type="image/avif" data-srcset="assets/img/hero/cel-1x1-lg.avif"><img aria-hidden="true" data-src="assets/img/hero/cel-1x1-sm.webp" data-srcset="assets/img/hero/cel-1x1-sm.webp 900w, assets/img/hero/cel-1x1-lg.webp 1800w" sizes="(max-width: 900px) 80vw, 36vw" width="1800" height="1800" decoding="async" alt="同一张封面的 1:1 版本" data-en-alt="The same cover at 1:1"></picture>
+            <picture data-ratio="3:4"><source type="image/avif" data-srcset="assets/img/hero/cel-3x4-lg.avif"><img aria-hidden="true" data-src="assets/img/hero/cel-3x4-sm.webp" data-srcset="assets/img/hero/cel-3x4-sm.webp 675w, assets/img/hero/cel-3x4-lg.webp 1350w" sizes="(max-width: 900px) 70vw, 28vw" width="1350" height="1800" decoding="async" alt="同一张封面的 3:4 版本" data-en-alt="The same cover at 3:4"></picture>
+            <picture data-ratio="9:16"><source type="image/avif" data-srcset="assets/img/hero/cel-9x16-lg.avif"><img aria-hidden="true" data-src="assets/img/hero/cel-9x16-sm.webp" data-srcset="assets/img/hero/cel-9x16-sm.webp 506w, assets/img/hero/cel-9x16-lg.webp 1012w" sizes="(max-width: 900px) 52vw, 22vw" width="1012" height="1800" decoding="async" alt="同一张封面的 9:16 版本" data-en-alt="The same cover at 9:16"></picture>
+            <picture data-ratio="2.35:1"><source type="image/avif" data-srcset="assets/img/hero/cel-2.35x1-lg.avif"><img aria-hidden="true" data-src="assets/img/hero/cel-2.35x1-sm.webp" data-srcset="assets/img/hero/cel-2.35x1-sm.webp 900w, assets/img/hero/cel-2.35x1-lg.webp 1800w" sizes="(max-width: 900px) 92vw, 44vw" width="1800" height="766" decoding="async" alt="同一张封面的 2.35:1 版本" data-en-alt="The same cover at 2.35:1"></picture>
           </div>
           <span class="marks" aria-hidden="true"></span>
         </div>
@@ -154,7 +154,7 @@
           <button type="button" data-ratio="9:16" aria-pressed="false"><span class="shape" style="width:15px"></span><span>9:16</span></button>
           <button type="button" data-ratio="2.35:1" aria-pressed="false"><span class="shape" style="width:61px"></span><span>2.35:1</span></button>
           <span class="sep" aria-hidden="true"></span>
-          <button type="button" class="play" id="reflow-play" aria-pressed="false" aria-label="暂停轮播" data-en-aria-label="Pause">
+          <button type="button" class="play" id="reflow-play" aria-pressed="true" aria-label="自动轮播" data-en-aria-label="Autoplay">
             <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
             <svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
           </button>
@@ -173,7 +173,7 @@
         <p class="tag"><span class="tag-ep">EP.00</span><span class="tag-name"><span data-l="zh">编辑器</span><span data-l="en" lang="en">The editor</span></span></p>
         <h2 class="h2" id="tour-h"><span data-l="zh"><span class="ph">只填文字，</span><span class="ph"><em>样子交给风格</em>。</span></span><span data-l="en" lang="en">Just the words; <em>the look does the rest</em>.</span></h2>
       </div>
-      <p class="lede"><span data-l="zh">「内容」面板里只有频道、标题、副标题和角标。配色、版式、字效都由档案和风格决定，你只管这一期写什么。</span><span data-l="en" lang="en">The Content sheet asks for a channel, a title, a subtitle and a corner tag — nothing else. Colours, layout and lettering come from the profile and the look; you only say what this episode is about.</span></p>
+      <p class="lede"><span data-l="zh">「内容」面板管的就是字：频道、标题、副标题和角标。配色、版式、字效都由档案和风格决定，你只管这一期写什么。</span><span data-l="en" lang="en">The Content sheet is where the words go: a channel, a title, a subtitle and a corner tag. Colours, layout and lettering come from the profile and the look; you only say what this episode is about.</span></p>
     </div>
     <figure class="shot reveal">
       <div class="shot-in">
@@ -196,7 +196,7 @@
       <li><b><span data-l="zh">标题</span><span data-l="en" lang="en">Title</span></b><span data-l="zh">输入框里的一行就是封面上的一行；<code>*星号*</code>包住的词显示为频道主色。</span><span data-l="en" lang="en">One line here is one line on the cover; words in <code>*asterisks*</code> take the channel colour.</span></li>
       <li><b><span data-l="zh">所有尺寸</span><span data-l="en" lang="en">Every size</span></b><span data-l="zh">每个输出尺寸一张缩略图，点一下就在画布上看它。</span><span data-l="en" lang="en">A thumbnail for every size you export; click one to see it on the canvas.</span></li>
       <li><b><span data-l="zh">调整范围</span><span data-l="en" lang="en">Applies to</span></b><span data-l="zh">拖动和缩放作用于所有尺寸、同方向的尺寸，或只这一个。</span><span data-l="en" lang="en">A move or resize applies to every size, the sizes facing the same way, or this one alone.</span></li>
-      <li><b><span data-l="zh">你看着办 · 导出</span><span data-l="en" lang="en">Surprise me · Export</span></b><span data-l="zh">按空格随机抽六手；⌘E 导出所有打开的尺寸。</span><span data-l="en" lang="en">Space deals six hands; ⌘E exports every size that is ticked.</span></li>
+      <li><b><span data-l="zh">你看着办 · 导出</span><span data-l="en" lang="en">Surprise me · Export</span></b><span data-l="zh">按空格随机抽六手；⌘E 打开导出。</span><span data-l="en" lang="en">Space deals six hands; ⌘E opens Export.</span></li>
     </ol>
   </div>
 </section>
@@ -236,17 +236,17 @@
             </div>
           </div>
           <p class="result" id="picker-result" aria-live="polite"></p>
-          <p class="note" style="margin-top:10px"><span data-l="zh">各平台要的封面比例，已在手机上传页上逐个核对。</span><span data-l="en" lang="en">The ratios each platform wants were checked on its upload page, on a phone.</span></p>
+          <p class="note" style="margin-top:10px"><span data-l="zh">各平台要哪些比例，已在手机的上传页上逐个核对过。</span><span data-l="en" lang="en">Which ratios each platform wants was checked on its upload page, on a phone.</span></p>
         </div>
       </div>
 
-      <div class="sheet reveal" id="sheet" aria-label="同一张封面导出的六个文件" data-en-aria-label="The six files exported from one cover">
-        <figure class="s-16x9" data-ratio="16:9"><div class="pic"><img src="assets/img/hero/cel-16x9-sm.webp" width="900" height="506" loading="lazy" decoding="async" alt="16:9 封面" data-en-alt="The 16:9 cover"></div><figcaption><b>16:9</b>01-街拍日记_雨夜东京漫步_1920x1080@2x.png</figcaption></figure>
-        <figure class="s-4x3" data-ratio="4:3"><div class="pic"><img src="assets/img/hero/cel-4x3-sm.webp" width="900" height="675" loading="lazy" decoding="async" alt="4:3 封面" data-en-alt="The 4:3 cover"></div><figcaption><b>4:3</b>01-街拍日记_雨夜东京漫步_1600x1200@2x.png</figcaption></figure>
-        <figure class="s-3x4" data-ratio="3:4"><div class="pic"><img src="assets/img/hero/cel-3x4-sm.webp" width="675" height="900" loading="lazy" decoding="async" alt="3:4 封面" data-en-alt="The 3:4 cover"></div><figcaption><b>3:4</b>01-街拍日记_雨夜东京漫步_1200x1600@2x.png</figcaption></figure>
-        <figure class="s-9x16" data-ratio="9:16"><div class="pic"><img src="assets/img/hero/cel-9x16-sm.webp" width="506" height="900" loading="lazy" decoding="async" alt="9:16 封面" data-en-alt="The 9:16 cover"></div><figcaption><b>9:16</b>…_1080x1920@2x.png</figcaption></figure>
-        <figure class="s-1x1" data-ratio="1:1"><div class="pic"><img src="assets/img/hero/cel-1x1-sm.webp" width="900" height="900" loading="lazy" decoding="async" alt="1:1 封面" data-en-alt="The 1:1 cover"></div><figcaption><b>1:1</b>01-街拍日记_雨夜东京漫步_1200x1200@2x.png</figcaption></figure>
-        <figure class="s-2.35x1" data-ratio="2.35:1"><div class="pic"><img src="assets/img/hero/cel-2.35x1-sm.webp" width="900" height="383" loading="lazy" decoding="async" alt="2.35:1 封面" data-en-alt="The 2.35:1 cover"></div><figcaption><b>2.35:1</b>01-街拍日记_雨夜东京漫步_900x383@2x.png</figcaption></figure>
+      <div class="sheet reveal" id="sheet" role="group" aria-label="同一张封面导出的六个文件" data-en-aria-label="The six files exported from one cover">
+        <figure class="s-16x9" data-ratio="16:9"><div class="pic"><img src="assets/img/hero/cel-16x9-sm.webp" width="900" height="506" loading="lazy" decoding="async" alt="16:9 封面" data-en-alt="The 16:9 cover"></div><figcaption><b>16:9</b><span lang="zh-CN">01-街拍日记_雨夜东京漫步_1920x1080@2x.png</span></figcaption></figure>
+        <figure class="s-4x3" data-ratio="4:3"><div class="pic"><img src="assets/img/hero/cel-4x3-sm.webp" width="900" height="675" loading="lazy" decoding="async" alt="4:3 封面" data-en-alt="The 4:3 cover"></div><figcaption><b>4:3</b><span lang="zh-CN">01-街拍日记_雨夜东京漫步_1600x1200@2x.png</span></figcaption></figure>
+        <figure class="s-3x4" data-ratio="3:4"><div class="pic"><img src="assets/img/hero/cel-3x4-sm.webp" width="675" height="900" loading="lazy" decoding="async" alt="3:4 封面" data-en-alt="The 3:4 cover"></div><figcaption><b>3:4</b><span lang="zh-CN">01-街拍日记_雨夜东京漫步_1200x1600@2x.png</span></figcaption></figure>
+        <figure class="s-9x16" data-ratio="9:16"><div class="pic"><img src="assets/img/hero/cel-9x16-sm.webp" width="506" height="900" loading="lazy" decoding="async" alt="9:16 封面" data-en-alt="The 9:16 cover"></div><figcaption><b>9:16</b><span lang="zh-CN">…_1080x1920@2x.png</span></figcaption></figure>
+        <figure class="s-1x1" data-ratio="1:1"><div class="pic"><img src="assets/img/hero/cel-1x1-sm.webp" width="900" height="900" loading="lazy" decoding="async" alt="1:1 封面" data-en-alt="The 1:1 cover"></div><figcaption><b>1:1</b><span lang="zh-CN">01-街拍日记_雨夜东京漫步_1200x1200@2x.png</span></figcaption></figure>
+        <figure class="s-2.35x1" data-ratio="2.35:1"><div class="pic"><img src="assets/img/hero/cel-2.35x1-sm.webp" width="900" height="383" loading="lazy" decoding="async" alt="2.35:1 封面" data-en-alt="The 2.35:1 cover"></div><figcaption><b>2.35:1</b><span lang="zh-CN">01-街拍日记_雨夜东京漫步_900x383@2x.png</span></figcaption></figure>
       </div>
     </div>
 
@@ -260,7 +260,7 @@
       <div>
         <p class="fig">14PX</p>
         <h3><span data-l="zh">最窄的信息流里也看得清</span><span data-l="en" lang="en">Readable in the narrowest feed</span></h3>
-        <p><span data-l="zh">按最窄的信息流算，标题也不小于 14px：抖音主页网格里 3:4 封面只有约 128px 宽，YouTube 侧栏里 16:9 封面约 168px。</span><span data-l="en" lang="en">Sized for the narrowest feed, a title stays at 14 px or more — Douyin's grid shows a 3:4 cover about 128 px wide, YouTube's side list a 16:9 one about 168 px.</span></p>
+        <p><span data-l="zh">标题框至少放得下两行字，按最窄的信息流算，字号也不小于 14px：抖音主页网格里 3:4 封面只有约 128px 宽，YouTube 侧栏里 16:9 封面约 168px（信息流宽度是估算的，还没在真机截图上量过）。</span><span data-l="en" lang="en">The title's box leaves room for two lines at 14 px or more as the narrowest feed shows them — Douyin's grid shows a 3:4 cover about 128 px wide, YouTube's side list a 16:9 one about 168 px (feed widths are estimates, not yet measured on real phones).</span></p>
       </div>
       <div>
         <p class="fig">6–8</p>
@@ -354,15 +354,15 @@
         <h2 class="h2" id="deal-h"><span data-l="zh"><span class="ph">没灵感？</span><span class="ph">按<em>空格</em>。</span></span><span data-l="en" lang="en">Stuck? Press <em>Space</em>.</span></h2>
         <p class="lede"><span data-l="zh">「你看着办」把这张封面怎么画重新随机一遍：风格和它的滑条、深浅底、标题的文字效果和变形、你加的图层摆在哪……一次抽六手，每手一个不同的风格。点一手放到画布上；不满意就再抽，或者撤销回去。</span><span data-l="en" lang="en">Surprise me re-deals how the cover is drawn — the look and its sliders, the ground, the title's lettering and bend, where your own layers sit. It deals six hands at once, each in a different look; click one to put it on the canvas, deal again, or undo.</span></p>
       </div>
-      <div class="space-key" aria-hidden="true">SPACE<small>空格</small></div>
+      <div class="space-key" aria-hidden="true">SPACE<small><span data-l="zh">在应用里按</span><span data-l="en">in the app</span></small></div>
     </div>
     <ol class="hands" id="hands" role="list" aria-live="polite"></ol>
-    <noscript><p class="note" style="margin-top:20px">（需要 JavaScript 显示抽出的六手。）</p></noscript>
+    <noscript><p class="note" style="margin-top:20px">（需要 JavaScript 显示抽出的六手。<span lang="en">JavaScript is needed to show the hands.</span>）</p></noscript>
     <div class="deal-foot">
-      <button type="button" class="deal-btn" id="deal-btn"><span data-l="zh">再抽一次</span><span data-l="en" lang="en">Deal again</span> <span class="kbd" aria-hidden="true"><span data-l="zh">空格</span><span data-l="en">Space</span></span></button>
+      <button type="button" class="deal-btn" id="deal-btn"><span data-l="zh">换一组看看</span><span data-l="en" lang="en">Show another deal</span></button>
       <p class="note"><span data-l="zh">这几手都是在 SmedCover 里真实抽出来的（预先存好，网页里轮流展示），尺寸是抖音 / 小红书 / 视频号用的 3:4。</span><span data-l="en" lang="en">These hands were really dealt in SmedCover (saved beforehand; the page takes turns showing them), at 3:4 — the size Douyin, RED and WeChat Channels use.</span></p>
     </div>
-    <div class="locks" aria-label="可以锁住的项目" data-en-aria-label="What you can lock">
+    <div class="locks" role="group" aria-label="可以锁住的项目" data-en-aria-label="What you can lock">
       <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg><span data-l="zh">风格</span><span data-l="en">Look</span></span>
       <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg><span data-l="zh">深浅底</span><span data-l="en">Ground</span></span>
       <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg><span data-l="zh">文字效果</span><span data-l="en">Lettering</span></span>
@@ -379,7 +379,7 @@
   <div class="wrap">
     <p class="tag"><span class="tag-ep">EP.04</span><span class="tag-name"><span data-l="zh">字</span><span data-l="en" lang="en">Lettering</span></span></p>
     <h2 class="h2" id="letters-h"><span data-l="zh"><span class="ph">中文标题，</span><span class="ph">按<em>中文的规矩</em>排。</span></span><span data-l="en" lang="en">Chinese titles, set by <em>Chinese rules</em>.</span></h2>
-    <p class="lede"><span data-l="zh">每一行按中文标题的排版规矩来：挨着汉字的西文和数字放大到和汉字一样高，标点按「开明式」挤压，行首行尾的标点不留空白。标题、副标题和你加的文字，都能单独换文字效果，再叠一种变形。</span><span data-l="en" lang="en">Each line is set the way Chinese titles are: Latin letters and numerals beside the hanzi scaled to stand as tall, punctuation squeezed in the Kaiming style, no blank space at either end of a line. The title, subtitle and any text you add can each take their own text effect, with a bend on top.</span></p>
+    <p class="lede"><span data-l="zh">每一行按中文标题的排版规矩来：挨着汉字的西文和数字放大到和汉字一样高，标点按「开明式」挤压，行首行尾的标点不留空白。标题、副标题和你加的文字，都能单独换文字效果，再叠一种变形。</span><span data-l="en" lang="en">Each line is set the way Chinese titles are: Latin letters and numerals beside the hanzi scaled to stand as tall, punctuation squeezed in the Kaiming style, an opening mark at the start of a line and a closing mark at its end losing their blank. The title, subtitle and any text you add can each take their own text effect, with a bend on top.</span></p>
     <div class="letters">
       <div>
         <ul class="fx-grid" role="list">
@@ -445,8 +445,8 @@
     <div class="batch">
       <div>
         <div class="term">
-          <div class="term-bar"><span>episodes.csv</span><button type="button" class="copy" data-copy="csv"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div>
-<pre id="csv"><span class="c">频道,标题,角标,副标题</span>
+          <div class="term-bar"><span>episodes.csv</span><button type="button" class="copy" data-copy="csv" aria-label="复制 episodes.csv" data-en-aria-label="Copy episodes.csv"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div>
+<pre id="csv" lang="zh-CN"><span class="c">频道,标题,角标,副标题</span>
 街拍日记,雨夜<span class="hl">*东京*</span>漫步,EP.07,从涩谷走到新宿的一晚
 胶片故事,"一卷 <span class="hl">*Portra 400*</span>\n的夏天",EP.12,海边、旧相机和过期胶卷
 器材测评,"<span class="hl">*50mm*</span> 定焦\n值不值得买",EP.03,三个月实拍之后的答案
@@ -457,11 +457,11 @@
         <p class="lede" style="margin-top:0"><span data-l="zh">每行一张封面：用那一行频道自己的封面，换上那一行的文字，按档案要的每个尺寸全部导出。上面这张表，是 5 行 × 6 个尺寸 = 30 张图。标题里用 <code>\n</code> 换行。</span><span data-l="en" lang="en">A cover per row: that row's channel, that row's words, every size the profile wants. The sheet above makes 5 rows × 6 sizes = 30 images. <code>\n</code> breaks a title's line.</span></p>
       </div>
       <ul class="feed reveal" role="list">
-        <li><img src="assets/img/channels/shot.webp" width="960" height="540" loading="lazy" decoding="async" alt="街拍日记频道的封面：雨夜东京漫步" data-en-alt="The Street diary channel's cover"><div class="meta"><b style="--c:#fcee0a"><i></i>街拍日记</b>STREET DIARY · <span class="mono">SHOT</span></div></li>
-        <li><img src="assets/img/channels/film.webp" width="960" height="540" loading="lazy" decoding="async" alt="胶片故事频道的封面：一卷 Portra 400 的夏天" data-en-alt="The Film stories channel's cover"><div class="meta"><b style="--c:#fb5607"><i></i>胶片故事</b>FILM STORIES · <span class="mono">FILM</span></div></li>
-        <li><img src="assets/img/channels/test.webp" width="960" height="540" loading="lazy" decoding="async" alt="器材测评频道的封面：50mm 定焦值不值得买" data-en-alt="The Gear review channel's cover"><div class="meta"><b style="--c:#3a86ff"><i></i>器材测评</b>GEAR REVIEW · <span class="mono">TEST</span></div></li>
-        <li><img src="assets/img/channels/brkd.webp" width="960" height="540" loading="lazy" decoding="async" alt="思路拆解频道的封面：一张照片的构图拆解" data-en-alt="The Breakdown channel's cover"><div class="meta"><b style="--c:#a855f7"><i></i>思路拆解</b>BREAKDOWN · <span class="mono">BRKD</span></div></li>
-        <li><img src="assets/img/channels/make.webp" width="960" height="540" loading="lazy" decoding="async" alt="动手做频道的封面：自己做一个胶片扫描架" data-en-alt="The Maker log channel's cover"><div class="meta"><b style="--c:#06d6a0"><i></i>动手做</b>MAKER LOG · <span class="mono">MAKE</span></div></li>
+        <li><img src="assets/img/channels/shot.webp" width="960" height="540" loading="lazy" decoding="async" alt="街拍日记频道的封面：雨夜东京漫步" data-en-alt="The Street diary channel's cover"><div class="meta"><b style="--c:#fcee0a"><i></i><span lang="zh-CN">街拍日记</span></b>STREET DIARY · <span class="mono">SHOT</span></div></li>
+        <li><img src="assets/img/channels/film.webp" width="960" height="540" loading="lazy" decoding="async" alt="胶片故事频道的封面：一卷 Portra 400 的夏天" data-en-alt="The Film stories channel's cover"><div class="meta"><b style="--c:#fb5607"><i></i><span lang="zh-CN">胶片故事</span></b>FILM STORIES · <span class="mono">FILM</span></div></li>
+        <li><img src="assets/img/channels/test.webp" width="960" height="540" loading="lazy" decoding="async" alt="器材测评频道的封面：50mm 定焦值不值得买" data-en-alt="The Gear review channel's cover"><div class="meta"><b style="--c:#3a86ff"><i></i><span lang="zh-CN">器材测评</span></b>GEAR REVIEW · <span class="mono">TEST</span></div></li>
+        <li><img src="assets/img/channels/brkd.webp" width="960" height="540" loading="lazy" decoding="async" alt="思路拆解频道的封面：一张照片的构图拆解" data-en-alt="The Breakdown channel's cover"><div class="meta"><b style="--c:#a855f7"><i></i><span lang="zh-CN">思路拆解</span></b>BREAKDOWN · <span class="mono">BRKD</span></div></li>
+        <li><img src="assets/img/channels/make.webp" width="960" height="540" loading="lazy" decoding="async" alt="动手做频道的封面：自己做一个胶片扫描架" data-en-alt="The Maker log channel's cover"><div class="meta"><b style="--c:#06d6a0"><i></i><span lang="zh-CN">动手做</span></b>MAKER LOG · <span class="mono">MAKE</span></div></li>
       </ul>
     </div>
     <figure class="shot export-shot reveal">
@@ -484,14 +484,14 @@
     <p class="lede"><span data-l="zh">桌面应用可以开一个 MCP 接口，Claude Code、Codex、Cursor 这类 agent 连进来，就在你开着的窗口里改文字、换风格、摆图层、出预览、导出。每一处改动你都看得到，每一处都是一步撤销。</span><span data-l="en" lang="en">The desktop app can open an MCP endpoint; agents such as Claude Code, Codex or Cursor connect and work in the window you have open — changing words and looks, placing layers, drawing previews, exporting. You see every change, and each is one step of undo.</span></p>
     <div class="agents-grid">
       <div class="term">
-        <div class="term-bar"><span>Claude Code</span><button type="button" class="copy" data-copy="mcp"><span data-l="zh">复制命令</span><span data-l="en">Copy</span></button></div>
+        <div class="term-bar"><span>Claude Code</span><button type="button" class="copy" data-copy="mcp" aria-label="复制 Claude Code 的配置命令" data-en-aria-label="Copy the Claude Code command"><span data-l="zh">复制命令</span><span data-l="en">Copy</span></button></div>
 <pre><span class="p">$ </span><span id="mcp">claude mcp add --transport http --scope user smedcover http://127.0.0.1:25277/mcp</span>
 
 <span class="c"># <span data-l="zh">然后在 Claude Code 里说：</span><span data-l="en">then ask Claude Code:</span></span>
 <span class="p">› </span><span class="say"><span data-l="zh">做这周的封面：标题《雨夜东京漫步》，用夜景风格，给我看个预览。</span><span data-l="en">Make this week's cover: the title “Rainy Tokyo night walk”, in a night look, and show me a preview.</span></span></pre>
       </div>
       <div class="term">
-        <div class="term-bar"><span>smedcover<span class="soon" data-since="0.5.0" hidden></span></span><button type="button" class="copy" data-copy="cli"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div>
+        <div class="term-bar"><span>smedcover<span class="soon" data-since="0.5.0"><span data-l="zh">即将推出</span><span data-l="en">Coming soon</span></span></span><button type="button" class="copy" data-copy="cli" aria-label="复制命令行示例" data-en-aria-label="Copy the command-line examples"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div>
 <pre id="cli"><span class="p">$ </span>smedcover export --channels all --sizes all --out covers
 <span class="p">$ </span>smedcover batch episodes.csv --sizes 16:9 --out covers
 <span class="p">$ </span>smedcover render SHOT --size 3:4 -o cover.png
@@ -501,7 +501,7 @@
     <ul class="points" role="list">
       <li><b><span data-l="zh">只在这台电脑上</span><span data-l="en" lang="en">This computer only</span></b><span data-l="zh">接口只在 127.0.0.1 上监听，不接受其他电脑和网页的请求；需要时打开「要求令牌」。</span><span data-l="en" lang="en">The endpoint listens on 127.0.0.1 and refuses other computers and web pages; turn on <i>Require a token</i> when you need it.</span></li>
       <li><b><span data-l="zh">看得见，撤得回</span><span data-l="en" lang="en">Watch it, undo it</span></b><span data-l="zh">调用一个接一个执行，你正在操作时它会等你；它做的每一步都在窗口的撤销历史里。</span><span data-l="en" lang="en">Calls run one at a time and wait while you're busy; every step it takes is in the window's undo history.</span></li>
-      <li><b><span data-l="zh">脚本里也能用</span><span data-l="en" lang="en">In scripts too</span></b><span data-l="zh">命令行 <code>smedcover</code> 调用的就是 agent 用的工具：应用开着就在那个窗口里做，没开就为这一次启动它。</span><span data-l="en" lang="en">The <code>smedcover</code> command calls the same tools the agents use: with SmedCover open it works in that window; otherwise it starts SmedCover for the run.</span></li>
+      <li><b><span data-l="zh">脚本里也能用</span><span data-l="en" lang="en">In scripts too</span><span class="soon" data-since="0.5.0"><span data-l="zh">即将推出</span><span data-l="en">Coming soon</span></span></b><span data-l="zh">命令行 <code>smedcover</code> 调用的就是 agent 用的工具：应用开着就在那个窗口里做，没开就为这一次启动它。</span><span data-l="en" lang="en">The <code>smedcover</code> command calls the same tools the agents use: with SmedCover open it works in that window; otherwise it starts SmedCover for the run.</span></li>
     </ul>
     <figure class="shot agents-shot reveal">
       <div class="frame-img"><img src="assets/img/rel/agents-960.webp" srcset="assets/img/rel/agents-960.webp 960w, assets/img/rel/agents-1560.webp 1560w" sizes="(max-width: 1290px) 96vw, 1240px" width="1560" height="950" loading="lazy" decoding="async" alt="设置窗口的「Agent 接入」页：开启 MCP 接口、要求令牌，以及给 Claude Code、Codex 复制的配置" data-en-alt="The Agents page in Settings: the MCP endpoint switch, Require a token, and the lines to copy for Claude Code and Codex"></div>
@@ -521,7 +521,7 @@
     </div>
     <div class="rel-list" id="rel-list">
       <div class="skeleton" aria-hidden="true"></div>
-      <noscript><p class="rel-empty">需要 JavaScript 显示更新记录。也可以直接去 <a href="https://github.com/cybertheye/smedcover/releases">GitHub Releases</a> 查看。</p></noscript>
+      <noscript><p class="rel-empty">需要 JavaScript 显示更新记录，也可以直接去 <a href="https://github.com/cybertheye/smedcover/releases">GitHub Releases</a> 查看。<br><span lang="en">JavaScript is needed to show the release notes; see <a href="https://github.com/cybertheye/smedcover/releases">GitHub Releases</a> instead.</span></p></noscript>
     </div>
   </div>
 </section>
@@ -577,7 +577,7 @@
           <li><span data-l="zh">打开下载的 <b>.dmg</b>，把 SmedCover 拖进「应用程序」文件夹。</span><span data-l="en" lang="en">Open the <b>.dmg</b> and drag SmedCover into Applications.</span></li>
           <li><span data-l="zh">第一次打开时，如果提示<b>「无法打开」或「无法验证开发者」</b>：先关掉提示，打开 <span class="path">系统设置 → 隐私与安全性</span>，往下找到关于 SmedCover 的那一行，点<b>「仍要打开」</b>，再确认一次。（macOS 14 及更早，也可以在「应用程序」里按住 Control 点 SmedCover，选「打开」。）</span><span data-l="en" lang="en">If the first launch says it <b>can't be opened</b> or is from an <b>unidentified developer</b>: close the message, open <span class="path">System Settings → Privacy &amp; Security</span>, find the line about SmedCover further down, click <b>Open Anyway</b> and confirm. (On macOS 14 and earlier you can also Control-click SmedCover in Applications and choose Open.)</span></li>
           <li><span data-l="zh">如果提示<b>「已损坏，无法打开」</b>：这是系统给下载的 App 加了隔离标记。打开「终端」，运行下面这行，再打开 SmedCover。</span><span data-l="en" lang="en">If it says the app is <b>damaged and can't be opened</b>, macOS has quarantined the download. Open Terminal, run this line, then open SmedCover again.</span>
-            <div class="code"><span id="xattr">xattr -dr com.apple.quarantine /Applications/SmedCover.app</span><button type="button" class="copy" data-copy="xattr"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div></li>
+            <div class="code"><span id="xattr">xattr -dr com.apple.quarantine /Applications/SmedCover.app</span><button type="button" class="copy" data-copy="xattr" aria-label="复制 xattr 命令" data-en-aria-label="Copy the xattr command"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div></li>
         </ol>
         <p class="why"><span data-l="zh">不知道选 Apple 芯片还是 Intel？点屏幕左上角的 Apple 菜单 →「关于本机」：「芯片」一栏写着 Apple M1、M2……就选 Apple 芯片；「处理器」写着 Intel 就选 Intel 版。</span><span data-l="en" lang="en">Apple silicon or Intel? Open the Apple menu → About This Mac: a <i>Chip</i> line reading Apple M1, M2… means Apple silicon; a <i>Processor</i> line reading Intel means Intel.</span></p>
       </div>
@@ -591,11 +591,11 @@
       <div role="tabpanel" id="panel-linux" aria-labelledby="tab-linux" tabindex="0">
         <ol class="steps">
           <li><b>AppImage</b> · <span data-l="zh">加上可执行权限，直接运行：</span><span data-l="en" lang="en">make it executable and run it:</span>
-            <div class="code"><span id="appimage">chmod +x SmedCover_*_amd64.AppImage && ./SmedCover_*_amd64.AppImage</span><button type="button" class="copy" data-copy="appimage"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div></li>
+            <div class="code"><span id="appimage">chmod +x SmedCover_*_amd64.AppImage && ./SmedCover_*_amd64.AppImage</span><button type="button" class="copy" data-copy="appimage" aria-label="复制 AppImage 命令" data-en-aria-label="Copy the AppImage command"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div></li>
           <li><b>.deb</b> · Debian / Ubuntu：
-            <div class="code"><span id="deb">sudo apt install ./SmedCover_*_amd64.deb</span><button type="button" class="copy" data-copy="deb"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div></li>
+            <div class="code"><span id="deb">sudo apt install ./SmedCover_*_amd64.deb</span><button type="button" class="copy" data-copy="deb" aria-label="复制 .deb 安装命令" data-en-aria-label="Copy the .deb command"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div></li>
           <li><b>.rpm</b> · Fedora <span data-l="zh">等</span><span data-l="en">and others</span>：
-            <div class="code"><span id="rpm">sudo dnf install ./SmedCover-*.x86_64.rpm</span><button type="button" class="copy" data-copy="rpm"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div></li>
+            <div class="code"><span id="rpm">sudo dnf install ./SmedCover-*.x86_64.rpm</span><button type="button" class="copy" data-copy="rpm" aria-label="复制 .rpm 安装命令" data-en-aria-label="Copy the .rpm command"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div></li>
         </ol>
         <p class="why"><span data-l="zh">第一次抠图前，在 <span class="path">⋯ → AI → 抠图</span> 里下载一次 BiRefNet 模型。</span><span data-l="en" lang="en">Before the first cut-out, download the BiRefNet model once under <span class="path">⋯ → AI → Cut-out</span>.</span></p>
       </div>

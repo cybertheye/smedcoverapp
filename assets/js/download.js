@@ -2,38 +2,43 @@
 // button; every installer is listed below it; "国内镜像 / GitHub" switches where the links point.
 import { DL_HOST, REPO } from "./config.js";
 import { kindOf, mirrorUrl } from "./releases.js";
-import { both, pair, fmtDate, fmtSize, applyLang, lang } from "./i18n.js";
+import { both, pair, fmtDate, fmtSize, applyLang, setBoth } from "./i18n.js";
+import { radioKeys, syncRoving } from "./showcase.js";
 
 const GROUPS = [["macOS", ["mac-arm", "mac-x64"]], ["Windows", ["win-setup", "win-msi"]], ["Linux", ["linux-appimage", "linux-deb", "linux-rpm"]]];
 const CN_ZONES = /^Asia\/(Shanghai|Chongqing|Chungking|Harbin|Urumqi|Kashgar)$/;
 
-/** { os: "mac" | "win" | "linux" | "mobile" | "unknown", arch: "arm" | "x86" | null } */
+/** { os: "mac" | "win" | "linux" | "mobile" | "unknown", arch: "arm" | "x86" | null, cros: ChromeOS (Linux apps run there in a container without FUSE, so no AppImage) } */
 export async function detectSystem() {
   const nav = navigator, ua = nav.userAgent || "", uad = nav.userAgentData;
   const plat = (uad && uad.platform) || nav.platform || "";
   let os = "unknown", arch = null;
+  const cros = /chrome ?os|cros/i.test(plat) || /CrOS/.test(ua);
   if ((uad && uad.mobile) || /Android|iPhone|iPad|iPod|Mobile|HarmonyOS/i.test(ua)) os = "mobile";
+  else if (cros) os = "linux";
   else if (/mac/i.test(plat) || /Mac OS X|Macintosh/.test(ua)) os = nav.maxTouchPoints > 1 ? "mobile" : "mac";
   else if (/win/i.test(plat) || /Windows/.test(ua)) os = "win";
-  else if (/linux|x11|cros|bsd/i.test(plat) || /Linux|X11|CrOS/.test(ua)) os = "linux";
+  else if (/linux|x11|bsd/i.test(plat) || /Linux|X11/.test(ua)) os = "linux";
+  if (os === "linux" && /aarch64|arm/i.test(nav.platform || "")) arch = "arm";
   if (uad && typeof uad.getHighEntropyValues === "function" && os !== "mobile") {
     try {
       const h = await uad.getHighEntropyValues(["architecture"]);
       if (h && h.architecture) arch = /arm/i.test(h.architecture) ? "arm" : "x86";
     } catch (e) { /* not given */ }
   }
-  return { os, arch };
+  return { os, arch, cros };
 }
 
 const ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/></svg>';
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 export function createDownloads(els) {
-  let sys = { os: "unknown", arch: null };
+  let sys = { os: "unknown", arch: null, cros: false };
   let state = null;
   let source = null;
 
-  const mirrorUsable = () => DL_HOST && state && state.mirror && state.mirror.ok !== false;
+  /** Links point at the mirror only once its latest.json has answered, and only for the version it names. */
+  const mirrorOn = () => !!(DL_HOST && source === "mirror" && state && state.mirror && state.mirror.ok === true);
   const pickSource = () => {
     if (!DL_HOST) return "github";
     let s = null;
@@ -44,16 +49,27 @@ export function createDownloads(els) {
     return CN_ZONES.test(zone) || /^zh-(CN|Hans)/i.test(navigator.language || "") ? "mirror" : "github";
   };
 
-  const release = () => state && state.releases[0];
+  /**
+   * The release to download: on the mirror, the version its latest.json names; on GitHub, the newest release
+   * GitHub has that carries installers (a version only the mirror has yet is skipped there).
+   */
+  const release = () => {
+    if (!state) return null;
+    if (mirrorOn()) {
+      const m = state.releases.find((r) => r.version === state.mirror.version);
+      if (m) return m;
+    }
+    return state.releases.find((r) => !r.fromMirror && (r.assets || []).some((a) => kindOf(a.name))) || null;
+  };
   const files = () => {
     const r = release();
     if (!r) return {};
     const out = {};
-    for (const a of r.assets) {
+    const onMirror = mirrorOn() && r.version === state.mirror.version;
+    for (const a of r.assets || []) {
       const k = kindOf(a.name);
       if (!k || out[k]) continue;
-      const useMirror = source === "mirror" && mirrorUsable();
-      out[k] = { ...a, kind: k, href: useMirror ? mirrorUrl(r.version, a.name) : a.url };
+      out[k] = { ...a, kind: k, href: onMirror ? mirrorUrl(r.version, a.name) : a.url };
     }
     return out;
   };
@@ -94,19 +110,22 @@ export function createDownloads(els) {
         if (f["win-setup"]) return button(f["win-setup"], { label: getLabel("win"), sub: subFor("win-setup") }) + (compact ? "" : link("win-msi", "dl.alsoMsi")) + (sys.arch === "arm" ? `<span class="dl-alt-mac">${both(...pair("dl.armOnly"))}</span>` : "");
         break;
       case "linux":
+        if (sys.arch === "arm") break;   // x64 builds only: let them choose
+        if (sys.cros && f["linux-deb"]) return button(f["linux-deb"], { label: getLabel("linux"), sub: ["ChromeOS · .deb", "ChromeOS · .deb"] }) + (compact ? "" : `<a class="dl-alt-mac" href="#files">${both(...pair("dl.all"))} ↓</a>`);
         if (f["linux-appimage"]) return button(f["linux-appimage"], { label: getLabel("linux"), sub: subFor("linux-appimage") }) + (compact ? "" : `<a class="dl-alt-mac" href="#files">${both(...pair("dl.alsoLinux"))} ↓</a>`) + (sys.arch === "arm" ? `<span class="dl-alt-mac">${both(...pair("dl.armOnly"))}</span>` : "");
         break;
       default:
         break;
     }
-    return `<a class="btn" href="#files">${both(...pair("dl.pick"))}<small>macOS · Windows · Linux</small></a>`;
+    const arm = (sys.os === "linux" || sys.os === "win") && sys.arch === "arm" ? `<span class="dl-alt-mac">${both(...pair("dl.armOnly"))}</span>` : "";
+    return `<a class="btn" href="#files">${both(...pair("dl.pick"))}<small>macOS · Windows · Linux</small></a>${arm}`;
   }
 
   function list() {
     const f = files();
     const r = release();
     if (!r || !Object.keys(f).length) return `<p class="note">${both(...pair("dl.fail"))} <a href="https://github.com/${REPO}/releases/latest" rel="noopener">GitHub Releases ↗</a></p>`;
-    const here = { mac: sys.arch === "x86" ? "mac-x64" : sys.arch === "arm" ? "mac-arm" : null, win: "win-setup", linux: "linux-appimage" }[sys.os];
+    const here = mainKind();
     return GROUPS.map(([name, kinds]) => {
       const rows = kinds.filter((k) => f[k]).map((k) => {
         const a = f[k];
@@ -132,19 +151,28 @@ export function createDownloads(els) {
     if (heroPrim && els.hero) els.hero.innerHTML = `<div class="hero-dl">${heroPrim}</div>`;
     els.files.innerHTML = list();
     els.ver.innerHTML = `v${esc(r.version)}<small>${both(fmtDate(r.date, "zh"), fmtDate(r.date, "en"))}</small>`;
-    if (els.badge) { els.badge.hidden = false; els.badge.textContent = `v${r.version}`; els.badge.setAttribute("aria-label", lang() === "en" ? `Version ${r.version}: what's new` : `${r.version} 版：更新了什么`); }
+    const top = state.releases[0];
+    if (els.badge && top) { els.badge.hidden = false; els.badge.textContent = `v${top.version}`; setBoth(els.badge, "aria-label", `${top.version} 版：更新了什么`, `Version ${top.version}: what's new`); }
     // the mirror switch
     if (els.source) {
       els.source.hidden = !DL_HOST;
-      els.source.querySelectorAll("[data-src]").forEach((b) => b.setAttribute("aria-checked", String(b.dataset.src === source)));
       const down = DL_HOST && state.mirror && state.mirror.ok === false;
+      els.source.querySelectorAll("[data-src]").forEach((b) => {
+        b.setAttribute("aria-checked", String(b.dataset.src === source));
+        if (b.dataset.src === "mirror") b.setAttribute("aria-disabled", String(!!down));
+      });
+      syncRoving(els.source.querySelector("[role=radiogroup]"));
       let note = els.source.querySelector(".mirror-down");
       if (down && !note) { note = document.createElement("span"); note.className = "mirror-down note"; els.source.append(note); }
       if (note) note.innerHTML = down ? both(...pair("dl.mirrorDown")) : "";
     }
     applyLang(els.root);
   }
-  const mainKind = () => ({ mac: sys.arch === "x86" ? "mac-x64" : sys.arch === "arm" ? "mac-arm" : "", win: "win-setup", linux: "linux-appimage" }[sys.os] || "");
+  const mainKind = () => ({
+    mac: sys.arch === "x86" ? "mac-x64" : sys.arch === "arm" ? "mac-arm" : "",
+    win: "win-setup",   // Windows on ARM runs the x64 build
+    linux: sys.arch === "arm" ? "" : sys.cros ? "linux-deb" : "linux-appimage",
+  }[sys.os] || "");
 
   return {
     async init() {
@@ -154,11 +182,12 @@ export function createDownloads(els) {
       if (els.source) {
         els.source.addEventListener("click", (e) => {
           const b = e.target.closest("[data-src]");
-          if (!b) return;
+          if (!b || b.getAttribute("aria-disabled") === "true") return;
           source = b.dataset.src;
           try { localStorage.setItem("sc.source", source); } catch (err) { /* blocked */ }
           render();
         });
+        radioKeys(els.source.querySelector("[role=radiogroup]"));
       }
       render();
       return sys;

@@ -5,7 +5,7 @@
 // Each source that answers calls back with the merged state, so the page fills in from the fastest and
 // corrects itself as the others arrive.
 import { DL_HOST, REPO, CACHE_TTL, FETCH_TIMEOUT, STATIC_RELEASES, NOTES_ZH } from "./config.js";
-import { markdown, parseNotes, inline } from "./markdown.js";
+import { markdown, parseNotes, inline, esc } from "./markdown.js";
 import { both, pair, fmtDate } from "./i18n.js";
 
 /** The files people download by hand; updater archives, signatures and latest.json are left out. */
@@ -36,6 +36,13 @@ export function expectedAssets(v) {
 export const mirrorBase = () => (/^https?:\/\//.test(DL_HOST) ? DL_HOST : `https://${DL_HOST}`).replace(/\/+$/, "");
 export const mirrorUrl = (version, name) => `${mirrorBase()}/v${version}/${encodeURIComponent(name)}`;
 
+/** What a version may look like ("0.6.0", "1.2.3-beta.1"); anything else from latest.json is ignored. */
+export const VERSION = /^\d+(?:\.\d+){0,3}(?:[-+][0-9A-Za-z.-]{1,32})?$/;
+/** An ISO date as given, or "" when it isn't one. */
+const validDate = (d) => (typeof d === "string" && !isNaN(Date.parse(d)) ? d : "");
+/** A link from the data, kept only when it is https. */
+const httpsUrl = (u) => (typeof u === "string" && /^https:\/\//i.test(u) ? u : "");
+
 /** "0.10.2" > "0.9.9" */
 export function cmpVersion(a, b) {
   const pa = String(a).replace(/^v/, "").split(/[.-]/).map((x) => parseInt(x, 10) || 0);
@@ -65,10 +72,21 @@ function fromGithub(list) {
     .map((r) => ({
       tag: r.tag_name, version: String(r.tag_name).replace(/^v/, ""), name: r.name || r.tag_name, date: r.published_at,
       url: r.html_url, body: r.body || "",
-      assets: (r.assets || []).filter((a) => HUMAN.test(a.name)).map((a) => ({ name: a.name, size: a.size, url: a.browser_download_url })),
+      assets: (r.assets || []).filter((a) => a && HUMAN.test(a.name)).map((a) => ({ name: a.name, size: a.size, url: a.browser_download_url })),
     }));
 }
-const sorted = (list) => list.slice().sort((a, b) => cmpVersion(b.version, a.version));
+/** Whatever a source gave, made safe to use: a sane version, an https link, a date, and only installers with https links. */
+const clean = (list) => (Array.isArray(list) ? list : [])
+  .filter((r) => r && typeof r.version === "string" && VERSION.test(r.version))
+  .map((r) => ({
+    tag: `v${r.version}`, version: r.version, date: validDate(r.date),
+    url: httpsUrl(r.url) || `https://github.com/${REPO}/releases/tag/v${r.version}`,
+    body: typeof r.body === "string" ? r.body : "",
+    assets: (Array.isArray(r.assets) ? r.assets : [])
+      .filter((a) => a && typeof a.name === "string" && HUMAN.test(a.name) && httpsUrl(a.url))
+      .map((a) => ({ name: a.name, size: Number(a.size) || null, url: a.url })),
+  }));
+const sorted = (list) => clean(list).sort((a, b) => cmpVersion(b.version, a.version));
 
 function readCache() {
   try {
@@ -107,21 +125,23 @@ export function loadReleases(onChange) {
       got.github && { list: got.github, origin: "github", at: Date.now() },
       got.cache && { list: got.cache.releases, origin: "cache", at: got.cache.t },
       got.static && { list: got.static.releases, origin: "static", at: Date.parse(got.static.generated) },
-    ].filter((c) => c && c.list && c.list.length);
+    ].filter((c) => c && (c.list = sorted(c.list)).length);
     // the source with the newest version wins; on a tie the earlier (fresher) one
     for (const c of candidates) {
-      if (!list || cmpVersion(sorted(c.list)[0].version, list[0].version) > 0) { list = sorted(c.list); origin = c.origin; fetchedAt = c.at; }
+      if (!list || cmpVersion(c.list[0].version, list[0].version) > 0) { list = c.list; origin = c.origin; fetchedAt = c.at; }
     }
     list = (list || []).map((r) => ({ ...r, notesZh: got.notesZh[r.tag] || null }));
     let mirror = null;
     if (DL_HOST) {
       const m = got.mirror;
-      mirror = m && m.version ? { ok: true, version: String(m.version).replace(/^v/, ""), notes: mirrorNotes(m.notes), date: m.pub_date, platforms: m.platforms || {} }
+      const v = m && typeof m.version === "string" ? m.version.trim().replace(/^v/, "") : "";
+      mirror = VERSION.test(v) ? { ok: true, version: v, notes: mirrorNotes(m.notes), date: validDate(m.pub_date), platforms: m.platforms || {} }
         : { ok: m === null ? null : false };
       if (mirror.ok) {
         const top = list[0];
         if (!top || cmpVersion(mirror.version, top.version) > 0) {
-          list.unshift({ tag: `v${mirror.version}`, version: mirror.version, date: mirror.date, url: `https://github.com/${REPO}/releases/tag/v${mirror.version}`,
+          // a version only the mirror has yet: its installers are named as the build names them, and they are on the mirror only
+          list.unshift({ tag: `v${mirror.version}`, version: mirror.version, date: mirror.date, url: "",
             body: "", assets: expectedAssets(mirror.version), notesZh: got.notesZh[`v${mirror.version}`] || null, fromMirror: true });
         }
         const same = list.find((r) => r.version === mirror.version);
@@ -152,7 +172,9 @@ const ago = (ms) => {
   const m = Math.round((Date.now() - ms) / 60000);
   if (m < 2) return pair("time.now");
   if (m < 60) return pair("time.min", { n: m });
-  return pair("time.hour", { n: Math.round(m / 60) });
+  if (m < 48 * 60) return pair("time.hour", { n: Math.round(m / 60) });
+  const iso = new Date(ms).toISOString();
+  return [fmtDate(iso, "zh"), fmtDate(iso, "en")];
 };
 
 function sourceLine(state) {
@@ -173,31 +195,34 @@ function li(items) { return items.map((h) => `<li>${h}</li>`).join(""); }
 
 function releaseCard(r, i) {
   const notes = parseNotes(r.body);
-  const imgLinkZh = { href: r.url, label: pair("rel.img")[0] };
-  const imgLinkEn = { href: r.url, label: pair("rel.img")[1] };
+  const ghUrl = r.url || `https://github.com/${REPO}/releases`;
+  const imgLinkEn = { href: ghUrl, label: pair("rel.img")[1] };
   const sumEn = notes.summary ? inline(notes.summary, { imgLink: imgLinkEn }) : (r.mirrorNotes ? inline(r.mirrorNotes.en) : "");
+  const zhOwn = !!(r.notesZh && r.notesZh.summary) || !!r.mirrorNotes;
   const sumZh = r.notesZh && r.notesZh.summary ? inline(r.notesZh.summary) : (r.mirrorNotes ? inline(r.mirrorNotes.zh) : sumEn);
   const hlEn = notes.highlights.map((h) => inline(h));
-  const hlZh = r.notesZh && r.notesZh.highlights ? r.notesZh.highlights.map((h) => inline(h)) : hlEn;
+  const hlZhOwn = !!(r.notesZh && r.notesZh.highlights);
+  const hlZh = hlZhOwn ? r.notesZh.highlights.map((h) => inline(h)) : hlEn;
   const latest = i === 0;
   const dateZh = fmtDate(r.date, "zh"), dateEn = fmtDate(r.date, "en");
   const full = notes.body.trim()
     ? `<details><summary>${both(...pair("rel.full"))}</summary>
-         <div class="md" lang="en">${markdown(notes.body, { imgLink: imgLinkEn, shift: 0 }).replace(/<h1>/g, "<h2>").replace(/<\/h1>/g, "</h2>")}</div></details>`
+         <div class="md" lang="en">${markdown(notes.body, { imgLink: imgLinkEn, shift: 2 })}</div></details>`
     : "";
   const hl = latest && (hlZh.length || hlEn.length)
-    ? `<ul class="rel-hl" data-l="zh">${li(hlZh)}</ul><ul class="rel-hl" data-l="en" lang="en">${li(hlEn)}</ul>`
+    ? `<ul class="rel-hl" data-l="zh"${hlZhOwn ? "" : ' lang="en"'}>${li(hlZh)}</ul><ul class="rel-hl" data-l="en" lang="en">${li(hlEn)}</ul>`
     : "";
-  return `<article class="rel${latest ? " latest" : ""}" aria-labelledby="rel-${r.version.replace(/\W/g, "-")}">
+  const id = `rel-${r.version.replace(/\W/g, "-")}`;
+  return `<article class="rel${latest ? " latest" : ""}" aria-labelledby="${id}">
     <div class="rel-head">
-      <h3 class="rel-ver" id="rel-${r.version.replace(/\W/g, "-")}">v${r.version}</h3>
+      <h3 class="rel-ver" id="${id}">v${esc(r.version)}</h3>
       ${latest ? `<span class="rel-badge">${both("最新", "LATEST")}</span>` : ""}
-      ${r.date ? `<time datetime="${r.date}">${both(dateZh, dateEn)}</time>` : ""}
+      ${r.date ? `<time datetime="${esc(r.date)}">${both(dateZh, dateEn)}</time>` : ""}
     </div>
-    ${sumZh || sumEn ? `<p class="rel-sum" data-l="zh">${sumZh}</p><p class="rel-sum" data-l="en" lang="en">${sumEn}</p>` : ""}
+    ${sumZh || sumEn ? `<p class="rel-sum" data-l="zh"${zhOwn ? "" : ' lang="en"'}>${sumZh}</p><p class="rel-sum" data-l="en" lang="en">${sumEn}</p>` : ""}
     ${hl}
     ${full}
-    <p class="rel-actions"><a href="${r.url}" rel="noopener">${both(...pair("rel.gh"))} ↗</a>${latest ? ` <a href="#download">${both("下载这一版", "Download this version")}</a>` : ""}</p>
+    <p class="rel-actions">${r.url ? `<a href="${esc(r.url)}" rel="noopener">${both(...pair("rel.gh"))} ↗</a> ` : ""}${latest ? `<a href="#download">${both("下载这一版", "Download this version")}</a>` : ""}</p>
   </article>`;
 }
 

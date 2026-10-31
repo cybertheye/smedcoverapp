@@ -4,7 +4,6 @@
 //
 //   node scripts/fetch-releases.mjs                 # Node 18 or newer (uses the built-in fetch)
 //   GITHUB_TOKEN=… node scripts/fetch-releases.mjs   # optional: a token lifts GitHub's 60 requests/hour
-//   DL_HOST=dl.example.com node scripts/fetch-releases.mjs   # optional: also record the mirror's latest.json
 //
 // Drafts and prereleases are left out. Each release keeps only the files people download by hand
 // (.dmg, -setup.exe, .msi, .AppImage, .deb, .rpm) — the same rule as assets/js/releases.js.
@@ -41,17 +40,7 @@ const releases = raw
   }))
   .sort((a, b) => (a.date < b.date ? 1 : -1));
 
-let latest = null;
-if (process.env.DL_HOST) {
-  try {
-    const h = process.env.DL_HOST;
-    latest = await getJson(`${/^https?:\/\//.test(h) ? h.replace(/\/+$/, "") : `https://${h}`}/latest.json`);
-  } catch (e) {
-    console.warn(`mirror: ${e.message} (left out)`);
-  }
-}
-
-const out = { generated: new Date().toISOString(), repo: REPO, releases, ...(latest ? { latest } : {}) };
+const out = { generated: new Date().toISOString(), repo: REPO, releases };
 await mkdir(dirname(OUT), { recursive: true });
 await writeFile(OUT, JSON.stringify(out, null, 1) + "\n");
 console.log(`data/releases.json: ${releases.length} releases, newest ${releases[0]?.tag ?? "none"}`);

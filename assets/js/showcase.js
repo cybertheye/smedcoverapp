@@ -2,6 +2,7 @@
 // Surprise me's deals, copy buttons, the install tabs and the gentle reveals.
 import { both, pair, setBoth, t, applyLang } from "./i18n.js";
 
+
 const RATIOS = ["16:9", "4:3", "3:4", "9:16", "1:1", "2.35:1"];
 /** platforms.js in SmedCover: the covers each platform wants (checked on its upload page). */
 const WANTS = {
@@ -50,15 +51,27 @@ export function initPicker() {
   update();
 }
 
-/** Arrow keys move the choice in a role=radiogroup made of buttons. */
-function radioKeys(group) {
+/** Only the checked radio of a group is in the tab order (arrow keys move within it). */
+export function syncRoving(group) {
+  if (!group) return;
+  const items = [...group.querySelectorAll("[role=radio]")];
+  const on = items.find((b) => b.getAttribute("aria-checked") === "true") || items[0];
+  items.forEach((b) => { b.tabIndex = b === on ? 0 : -1; });
+}
+
+/** Arrow keys move the choice in a role=radiogroup made of buttons (skipping disabled ones). */
+export function radioKeys(group) {
+  if (!group) return;
+  syncRoving(group);
+  group.addEventListener("click", () => setTimeout(() => syncRoving(group)));
   group.addEventListener("keydown", (e) => {
-    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) return;
-    const items = [...group.querySelectorAll("[role=radio]")];
+    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) return;
+    const items = [...group.querySelectorAll("[role=radio]")].filter((b) => b.getAttribute("aria-disabled") !== "true");
     const i = items.indexOf(document.activeElement);
     if (i < 0) return;
     e.preventDefault();
-    const next = items[(i + (e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : items.length - 1)) % items.length];
+    const fwd = e.key === "ArrowRight" || e.key === "ArrowDown";
+    const next = e.key === "Home" ? items[0] : e.key === "End" ? items[items.length - 1] : items[(i + (fwd ? 1 : items.length - 1)) % items.length];
     next.focus();
     next.click();
   });
@@ -215,9 +228,22 @@ export function initCopy() {
     }
     if (!b.dataset.label) b.dataset.label = b.innerHTML;
     b.innerHTML = both(...pair(ok ? "copied" : "copyFail"));
+    announce(...pair(ok ? "copied" : "copyFail"));
     clearTimeout(b._t);
     b._t = setTimeout(() => { b.innerHTML = b.dataset.label; }, 1600);
   });
+}
+
+/** Says something to screen readers (a polite live region at the end of the page). */
+export function announce(zh, en) {
+  let r = document.getElementById("sr-status");
+  if (!r) {
+    r = document.createElement("p");
+    r.id = "sr-status"; r.className = "sr-only"; r.setAttribute("role", "status");
+    document.body.append(r);
+  }
+  r.textContent = "";
+  setTimeout(() => { r.textContent = document.documentElement.dataset.lang === "en" ? en : zh; }, 50);
 }
 
 /** The install tabs (ARIA tabs; arrow keys move between them). */
@@ -278,9 +304,7 @@ export function initReveal() {
 /** data-since="0.5.0": a "coming soon" mark while the newest release is older than that. */
 export function markSince(latest, cmp) {
   document.querySelectorAll("[data-since]").forEach((el) => {
-    const soon = latest && cmp(latest, el.dataset.since) < 0;
-    el.hidden = !soon;
-    if (soon) el.innerHTML = both(...pair("soon"));
+    el.hidden = !!latest && cmp(latest, el.dataset.since) >= 0;
   });
 }
 
@@ -293,6 +317,7 @@ export function initPhoneLink() {
     try { await navigator.clipboard.writeText(url); ok = true; } catch (e) { ok = false; }
     if (!b.dataset.label) b.dataset.label = b.innerHTML;
     b.innerHTML = both(...pair(ok ? "copied" : "copyFail"));
+    announce(...pair(ok ? "copied" : "copyFail"));
     setTimeout(() => { b.innerHTML = b.dataset.label; }, 1800);
   });
 }

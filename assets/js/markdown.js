@@ -6,32 +6,42 @@
 const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
 export const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ESC[c]);
 
-const IMG = "\u0001IMG\u0001";
+/** Raw HTML tags that are dropped (other <words>, such as <Esc> or <T>, are text and stay, escaped). */
+const HTML_TAG = /<\/?(?:a|abbr|b|blockquote|br|code|del|details|div|em|font|h[1-6]|hr|i|iframe|img|ins|kbd|li|object|ol|p|picture|pre|s|script|source|span|strong|style|sub|summary|sup|table|tbody|td|th|thead|tr|u|ul|video)\b[^>]*>/gi;
 const safeUrl = (u) => (/^https?:\/\//i.test(u) ? u : null);
 
-/** Inline Markdown in one block of text → HTML. opts.imgLink: { href, label } for pictures. */
+/**
+ * Inline Markdown in one block of text → HTML. opts.imgLink: { href, label } for pictures.
+ * Code spans and links are taken out first and kept as placeholders (\u0002n\u0002), so neither the tag
+ * stripping nor the emphasis rules reach inside them; raw tags are then dropped and the rest escaped.
+ */
 export function inline(text, opts = {}) {
-  const codes = [];
-  let s = String(text)
-    .replace(/<img\b[^>]*>/gi, IMG)
-    .replace(/<br\s*\/?>/gi, " ")
-    .replace(/<\/?[a-z][^>]*>/gi, "");
-  s = s.replace(/`([^`]+)`/g, (_, c) => { codes.push(c); return `\u0002${codes.length - 1}\u0002`; });
-  s = esc(s);
-  s = s.replace(/\[([^\]]+)\]\(([^)\s]+)(?:\s+&quot;[^&]*&quot;)?\)/g, (m, label, href) => {
-    const u = safeUrl(href.replace(/&amp;/g, "&"));
-    return u ? `<a href="${esc(u)}" rel="noopener">${label}</a>` : label;
-  });
-  s = s.replace(/&lt;(https?:\/\/[^\s&]+)&gt;/g, (_, u) => `<a href="${u}" rel="noopener">${u}</a>`);
-  s = s.replace(/\*\*([^*]+?)\*\*|__([^_]+?)__/g, (_, a, b) => `<strong>${a ?? b}</strong>`);
-  s = s.replace(/(^|[^\w*])\*([^*\s][^*]*?)\*(?!\w)/g, "$1<em>$2</em>");
-  s = s.replace(/(^|[^\w])_([^_\s][^_]*?)_(?!\w)/g, "$1<em>$2</em>");
-  s = s.replace(/\u0002(\d+)\u0002/g, (_, i) => `<code>${esc(codes[+i])}</code>`);
-  if (s.includes(IMG)) {
+  const held = [];
+  const hold = (html) => { held.push(html); return `\u0002${held.length - 1}\u0002`; };
+  const imgLink = () => {
     const l = opts.imgLink;
-    s = s.split(IMG).join(l ? `<a class="img-link" href="${esc(l.href)}" rel="noopener">${esc(l.label)} ↗</a>` : "");
-  }
+    return l && safeUrl(l.href) ? hold(`<a class="img-link" href="${esc(l.href)}" rel="noopener">${esc(l.label)} ↗</a>`) : "";
+  };
+  let s = String(text).replace(/[\u0001\u0002]/g, "");
+  s = s.replace(/`([^`]+)`/g, (_, c) => hold(`<code>${esc(c)}</code>`));
+  s = s.replace(/<(https?:\/\/[^\s<>"]+)>/g, (_, u) => hold(`<a href="${esc(u)}" rel="noopener">${esc(u)}</a>`));
+  s = s.replace(/<img\b[^>]*>/gi, imgLink)
+    .replace(/<br\s*\/?>/gi, " ")
+    .replace(HTML_TAG, "");
+  s = s.replace(/\[([^\]]+)\]\(([^()\s\u0002]+)(?:\s+"[^"]*")?\)/g, (m, label, href) => {
+    const u = safeUrl(href);
+    return u ? hold(`<a href="${esc(u)}" rel="noopener">${emphasis(esc(label))}</a>`) : label;
+  });
+  s = emphasis(esc(s));
+  for (let i = held.length - 1; i >= 0; i--) s = s.split(`\u0002${i}\u0002`).join(held[i]);
   return s.trim();
+}
+
+function emphasis(s) {
+  return s
+    .replace(/\*\*([^*]+?)\*\*|__([^_]+?)__/g, (_, a, b) => `<strong>${a ?? b}</strong>`)
+    .replace(/(^|[^\w*])\*([^*\s][^*]*?)\*(?!\w)/g, "$1<em>$2</em>")
+    .replace(/(^|[^\w])_([^_\s][^_]*?)_(?!\w)/g, "$1<em>$2</em>");
 }
 
 const RE = {

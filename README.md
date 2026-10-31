@@ -61,13 +61,15 @@ nginx/smedcover-page.conf  nginx 配置示例
 - **latest.json 必须带 `Access-Control-Allow-Origin` 响应头**（页面从另一个域名读它）；`nginx/smedcover-page.conf` 末尾有镜像的示例配置。
 - 记得把镜像域名加进页面 CSP 的 `connect-src`（同一个文件里）。
 
+从 latest.json 和 GitHub 拿到的版本号、日期和链接都会先校验（版本号只接受 `0.6.0`、`1.2.3-beta.1` 这样的格式，链接只接受 https），再写进页面。
+
 默认下载源：访客在中国大陆时区（或浏览器语言是 zh-CN）时默认「国内镜像」，否则 GitHub；访客自己切换后会记住。latest.json 读不到时自动退回 GitHub，并提示一句。
 
 ## 发布数据怎么来、怎么更新
 
 页面同时问三个来源，谁先到先显示，后到的更新时再纠正：
 
-1. **镜像的 `latest.json`**（设了 `DL_HOST` 时）。它的版本比 GitHub 上的新时（镜像先上线），页面直接把这一版放在最上面，安装包按命名规则推出来（没有文件大小）。
+1. **镜像的 `latest.json`**（设了 `DL_HOST` 时）。下载源选「国内镜像」时，下载的就是它写的那个版本（链接只在 latest.json 读到之后才指向镜像，之前先用 GitHub 的）。它比 GitHub 上的新时（镜像先上线），更新记录最上面会多出这一版，安装包按命名规则推出来（没有文件大小）；选 GitHub 的访客仍然拿到 GitHub 上最新、带安装包的那一版，不会被指到 GitHub 上还不存在的文件。
 2. **GitHub REST API** `GET /repos/cybertheye/smedcover/releases`（不带令牌），跳过草稿和预发布版本，在访客浏览器的 localStorage 里缓存 `CACHE_TTL`；GitHub 连不上或被限流时，用之前缓存的旧数据。
 3. **`data/releases.json`**：随页面一起发布的静态副本。前两个都失败时（比如在国内连不上 GitHub、或者 API 被限流），更新记录和下载按钮照样能用。
 
@@ -77,8 +79,6 @@ nginx/smedcover-page.conf  nginx 配置示例
 
 ```bash
 node scripts/fetch-releases.mjs            # Node 18+；有 GITHUB_TOKEN 环境变量时用它，避开限流
-# 镜像已上线时也可以顺便记下镜像的 latest.json：
-DL_HOST=dl.example.com node scripts/fetch-releases.mjs
 git add data/releases.json && git commit -m "releases: v0.6.0"
 ```
 
@@ -120,6 +120,8 @@ SmedCover 的界面（`ui/`）可以直接在浏览器里跑（`HOST` 为 browse
 |---|---|---|
 | EP.05 照片 | v0.3.1 发布说明截图里裁出的画布（抠出的人物和标题穿插，界面是旧版的） | 桌面版：一张有人物的照片，「抠出主体」后和标题穿插（自动或逐字），16:9 画布，1600×1000 视口 2 倍截图；中英文界面各一张更好 |
 | EP.07 Agent | v0.4.0 发布说明里的「设置 → Agent 接入」截图（中文界面） | 桌面版同一页的英文界面截图；或者一张 Claude Code 终端和 SmedCover 窗口并排、agent 正在改封面（顶栏亮着 agent 的灯）的截图 |
+
+「安装遇到提示？」里的说明（macOS 的「仍要打开」和 `xattr`、Windows SmartScreen、Linux 的安装命令、「安装包还没有代码签名」）是通用的系统操作，SmedCover 自己的文档里还没有这一节；代码里确实没有配置 macOS 签名/公证和 Windows 证书。以后签了名，记得把这一段和页面上的「为什么会被拦」一起改掉。
 
 另外可以考虑：一张「抠图 + 照片铺满画布」的封面放进风格墙（很多风格会把照片画成自己的样子，比现在只有频道图形更好看），以及桌面版里立体挤出、融化等轮廓类文字效果的渲染。
 
