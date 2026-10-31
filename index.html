@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-en-text="SmedCover · Design the cover once, get every size">SmedCover · 封面做一次，尺寸全出齐</title>
+<meta name="description" content="SmedCover 是给自媒体批量做封面的桌面应用：品牌设好一次，每条视频选频道、写标题，B站、抖音、小红书、视频号、YouTube、公众号要的尺寸一次出齐。35 种风格、抠图穿插、批量导出，还能让 Claude Code 这类 AI agent 来做。免费开源，支持 macOS、Windows、Linux。" data-en-content="SmedCover is a desktop app for branded video covers: set up your brand once, then pick a channel and type the title to get every size Bilibili, Douyin, RED, WeChat and YouTube ask for. 35 looks, cut-outs, batch export, and AI agents such as Claude Code. Free and open source for macOS, Windows and Linux.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0b11" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f2eee4" media="(prefers-color-scheme: light)">
+<!-- Once the domain is settled, add <link rel="canonical"> and make og:image / og:url absolute (see README). -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SmedCover">
+<meta property="og:title" content="SmedCover · 封面做一次，尺寸全出齐" data-en-content="SmedCover · Design the cover once, get every size">
+<meta property="og:description" content="给自媒体批量做封面的桌面应用。品牌设好一次，之后每条视频只要选频道、写标题，所有平台要的尺寸一次出齐。免费开源。" data-en-content="A desktop app for branded video covers. Set up your brand once; then pick a channel, type the title and get every size each platform wants. Free and open source.">
+<meta property="og:image" content="assets/og/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/icons/favicon.ico" sizes="48x48">
+<link rel="icon" href="assets/icons/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preload" href="assets/fonts/bebas-neue.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="assets/img/hero/cel-16x9-sm.webp" imagesrcset="assets/img/hero/cel-16x9-sm.webp 900w, assets/img/hero/cel-16x9-lg.webp 1800w" imagesizes="(max-width: 900px) 92vw, 44vw" fetchpriority="high">
+<link rel="modulepreload" href="assets/js/main.js">
+<link rel="modulepreload" href="assets/js/config.js">
+<link rel="modulepreload" href="assets/js/i18n.js">
+<link rel="modulepreload" href="assets/js/releases.js">
+<link rel="modulepreload" href="assets/js/download.js">
+<link rel="modulepreload" href="assets/js/markdown.js">
+<link rel="modulepreload" href="assets/js/hero.js">
+<link rel="modulepreload" href="assets/js/showcase.js">
+<link rel="stylesheet" href="assets/css/site.css">
+<script>
+  // Language and theme before the first paint: ?lang=, then the visitor's choice, then the browser's languages.
+  (function () {
+    var d = document.documentElement, lang = "zh", theme = null;
+    try {
+      var q = new URLSearchParams(location.search).get("lang");
+      var s = localStorage.getItem("sc.lang");
+      if (q === "en" || q === "zh") lang = q;
+      else if (s === "en" || s === "zh") lang = s;
+      else {
+        var l = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "zh"]);
+        lang = /^zh/i.test(l[0] || "zh") ? "zh" : (l.some(function (x) { return /^zh/i.test(x); }) ? "zh" : "en");
+      }
+      theme = localStorage.getItem("sc.theme");
+    } catch (e) {}
+    d.setAttribute("data-lang", lang);
+    d.setAttribute("lang", lang === "zh" ? "zh-CN" : "en");
+    if (theme === "light" || theme === "dark") d.setAttribute("data-theme", theme);
+  })();
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SmedCover","applicationCategory":"DesignApplication","operatingSystem":"macOS, Windows, Linux","description":"给自媒体批量做封面的桌面应用：品牌设好一次，每条视频选频道、写标题，所有平台要的尺寸一次出齐。","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://www.gnu.org/licenses/agpl-3.0.html","author":{"@type":"Person","name":"cybertheye"},"codeRepository":"https://github.com/cybertheye/smedcover","downloadUrl":"https://github.com/cybertheye/smedcover/releases/latest"}
+</script>
+</head>
+<body>
+<a class="skip" href="#download"><span data-l="zh">跳到下载</span><span data-l="en" lang="en">Skip to download</span></a>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="SmedCover">
+      <img src="assets/icons/icon-96.webp" width="30" height="30" alt="">
+      <b>SMEDCOVER</b>
+    </a>
+    <nav class="nav" aria-label="页面导航" data-en-aria-label="Page sections">
+      <a href="#show"><span data-l="zh">展示</span><span data-l="en" lang="en">Tour</span></a>
+      <a href="#releases"><span data-l="zh">发布</span><span data-l="en" lang="en">News</span></a>
+      <a href="#download"><span data-l="zh">下载</span><span data-l="en" lang="en">Get it</span></a>
+    </nav>
+    <div class="tools">
+      <button type="button" class="ibtn lang-btn" id="lang-btn" aria-label="Switch to English" data-en-aria-label="切换到中文"><span data-l="zh">EN</span><span data-l="en">中文</span></button>
+      <button type="button" class="ibtn theme-btn" id="theme-btn" aria-label="切换浅色 / 深色" data-en-aria-label="Switch light / dark">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+      </button>
+      <a class="ibtn gh" href="https://github.com/cybertheye/smedcover" aria-label="GitHub" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.6a10.4 10.4 0 0 0-3.3 20.3c.5.1.7-.2.7-.5v-1.8c-2.9.6-3.5-1.4-3.5-1.4-.5-1.2-1.2-1.5-1.2-1.5-.9-.6.1-.6.1-.6 1 .1 1.6 1.1 1.6 1.1.9 1.6 2.4 1.1 3 .8.1-.7.4-1.1.7-1.4-2.3-.3-4.7-1.2-4.7-5.1 0-1.1.4-2 1.1-2.8-.1-.3-.5-1.3.1-2.8 0 0 .9-.3 2.9 1.1a9.9 9.9 0 0 1 5.2 0c2-1.4 2.9-1.1 2.9-1.1.6 1.5.2 2.5.1 2.8.7.8 1.1 1.7 1.1 2.8 0 4-2.4 4.8-4.7 5.1.4.3.7 1 .7 1.9v2.9c0 .3.2.6.7.5A10.4 10.4 0 0 0 12 1.6z"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero" aria-labelledby="hero-h">
+  <div class="hero-block" aria-hidden="true">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+      <polygon points="34,0 100,0 100,100 8,100" fill="#fcee0a"/>
+      <line x1="30.4" y1="0" x2="4.4" y2="100" stroke="var(--rule)" stroke-width="3" vector-effect="non-scaling-stroke"/>
+    </svg>
+    <div class="dots"></div>
+  </div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <div class="hero-brandrow">
+        <b>SMEDCOVER</b>
+        <a class="ver-badge" href="#releases" id="ver-badge" hidden></a>
+        <span class="what"><span data-l="zh">给视频创作者的封面工具</span><span data-l="en" lang="en">Covers for video creators</span></span>
+      </div>
+      <h1 id="hero-h">
+        <span data-l="zh">封面做<em>一次</em>，<br>尺寸<em>全出齐</em>。</span>
+        <span data-l="en" lang="en">Design it <em>once</em>.<br>Get <em>every size</em>.</span>
+      </h1>
+      <p class="lede">
+        <span data-l="zh">给自媒体批量做封面的桌面应用。品牌设好一次，之后每条视频只要选频道、写标题——B站、抖音、小红书、视频号、YouTube、公众号要的尺寸，一次全出来。</span>
+        <span data-l="en" lang="en">A desktop app for branded video covers. Set up your brand once; then, for every video, pick a channel and type the title — and get the cover at every size Bilibili, Douyin, RED, WeChat and YouTube ask for, all at once.</span>
+      </p>
+      <div class="hero-cta-wrap">
+        <div class="hero-cta">
+          <div id="hero-dl">
+            <a class="btn" href="#download"><span data-l="zh">下载 SmedCover</span><span data-l="en" lang="en">Download SmedCover</span><small><span data-l="zh">macOS · Windows · Linux</span><span data-l="en" lang="en">macOS · Windows · Linux</span></small></a>
+          </div>
+          <a class="btn-ghost" href="#show"><span data-l="zh">看看它能做什么</span><span data-l="en" lang="en">See what it makes</span> <span aria-hidden="true">↓</span></a>
+        </div>
+        <p class="hero-meta">
+          <span><span data-l="zh">免费</span><span data-l="en" lang="en">Free</span></span>
+          <span><span data-l="zh">开源（AGPL-3.0）</span><span data-l="en" lang="en">Open source (AGPL-3.0)</span></span>
+          <span>macOS / Windows / Linux</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="reflow" id="reflow">
+      <div class="stage" id="stage">
+        <div class="frame" id="frame">
+          <span class="ratio-big" id="ratio-big" aria-hidden="true">16:9</span>
+          <div class="pic" id="frame-pic">
+            <picture data-ratio="16:9"><source type="image/avif" srcset="assets/img/hero/cel-16x9-lg.avif"><img class="on" src="assets/img/hero/cel-16x9-sm.webp" srcset="assets/img/hero/cel-16x9-sm.webp 900w, assets/img/hero/cel-16x9-lg.webp 1800w" sizes="(max-width: 900px) 92vw, 44vw" width="1800" height="1013" fetchpriority="high" decoding="async" alt="SmedCover 导出的 16:9 封面：标题「雨夜东京漫步」，赛璐珞风格" data-en-alt="A 16:9 cover exported by SmedCover: the title 雨夜东京漫步 (Rainy Tokyo night walk), in the Cel look"></picture>
+            <picture data-ratio="4:3"><source type="image/avif" data-srcset="assets/img/hero/cel-4x3-lg.avif"><img data-src="assets/img/hero/cel-4x3-sm.webp" data-srcset="assets/img/hero/cel-4x3-sm.webp 900w, assets/img/hero/cel-4x3-lg.webp 1800w" sizes="(max-width: 900px) 92vw, 44vw" width="1800" height="1350" decoding="async" alt="同一张封面的 4:3 版本" data-en-alt="The same cover at 4:3"></picture>
+            <picture data-ratio="1:1"><source type="image/avif" data-srcset="assets/img/hero/cel-1x1-lg.avif"><img data-src="assets/img/hero/cel-1x1-sm.webp" data-srcset="assets/img/hero/cel-1x1-sm.webp 900w, assets/img/hero/cel-1x1-lg.webp 1800w" sizes="(max-width: 900px) 80vw, 36vw" width="1800" height="1800" decoding="async" alt="同一张封面的 1:1 版本" data-en-alt="The same cover at 1:1"></picture>
+            <picture data-ratio="3:4"><source type="image/avif" data-srcset="assets/img/hero/cel-3x4-lg.avif"><img data-src="assets/img/hero/cel-3x4-sm.webp" data-srcset="assets/img/hero/cel-3x4-sm.webp 675w, assets/img/hero/cel-3x4-lg.webp 1350w" sizes="(max-width: 900px) 70vw, 28vw" width="1350" height="1800" decoding="async" alt="同一张封面的 3:4 版本" data-en-alt="The same cover at 3:4"></picture>
+            <picture data-ratio="9:16"><source type="image/avif" data-srcset="assets/img/hero/cel-9x16-lg.avif"><img data-src="assets/img/hero/cel-9x16-sm.webp" data-srcset="assets/img/hero/cel-9x16-sm.webp 506w, assets/img/hero/cel-9x16-lg.webp 1012w" sizes="(max-width: 900px) 52vw, 22vw" width="1012" height="1800" decoding="async" alt="同一张封面的 9:16 版本" data-en-alt="The same cover at 9:16"></picture>
+            <picture data-ratio="2.35:1"><source type="image/avif" data-srcset="assets/img/hero/cel-2.35x1-lg.avif"><img data-src="assets/img/hero/cel-2.35x1-sm.webp" data-srcset="assets/img/hero/cel-2.35x1-sm.webp 900w, assets/img/hero/cel-2.35x1-lg.webp 1800w" sizes="(max-width: 900px) 92vw, 44vw" width="1800" height="766" decoding="async" alt="同一张封面的 2.35:1 版本" data-en-alt="The same cover at 2.35:1"></picture>
+          </div>
+          <span class="marks" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="reflow-bar">
+        <p class="reflow-caption" id="reflow-caption" aria-live="polite"><span data-l="zh">B站 / YouTube · 16:9</span><span data-l="en" lang="en">Bilibili / YouTube · 16:9</span><span class="mono">1920×1080</span></p>
+        <div class="strip" role="group" aria-label="封面尺寸" data-en-aria-label="Cover sizes" id="strip">
+          <button type="button" data-ratio="16:9" aria-pressed="true"><span class="shape" style="width:46px"></span><span>16:9</span></button>
+          <button type="button" data-ratio="4:3" aria-pressed="false"><span class="shape" style="width:35px"></span><span>4:3</span></button>
+          <button type="button" data-ratio="1:1" aria-pressed="false"><span class="shape" style="width:26px"></span><span>1:1</span></button>
+          <button type="button" data-ratio="3:4" aria-pressed="false"><span class="shape" style="width:20px"></span><span>3:4</span></button>
+          <button type="button" data-ratio="9:16" aria-pressed="false"><span class="shape" style="width:15px"></span><span>9:16</span></button>
+          <button type="button" data-ratio="2.35:1" aria-pressed="false"><span class="shape" style="width:61px"></span><span>2.35:1</span></button>
+          <span class="sep" aria-hidden="true"></span>
+          <button type="button" class="play" id="reflow-play" aria-pressed="false" aria-label="暂停轮播" data-en-aria-label="Pause">
+            <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+            <svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+          </button>
+        </div>
+        <p class="reflow-note"><span data-l="zh">真实导出 · 同一张封面的六个尺寸</span><span data-l="en" lang="en">Real exports · one cover at six sizes</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="credits" aria-label="适用平台" data-en-aria-label="Made for">
+      <span>BILIBILI</span><span>DOUYIN</span><span>XIAOHONGSHU · RED</span><span>WECHAT CHANNELS</span><span>YOUTUBE</span><span>WECHAT ARTICLE</span>
+    </p>
+  </div>
+</section>
+
+<!-- ============ THE APP ============ -->
+<section class="section tour" id="show" aria-labelledby="tour-h">
+  <div class="wrap">
+    <div class="tour-head">
+      <div>
+        <p class="tag"><span class="tag-ep">EP.00</span><span class="tag-name"><span data-l="zh">编辑器</span><span data-l="en" lang="en">The editor</span></span></p>
+        <h2 class="h2" id="tour-h"><span data-l="zh">只填文字，<em>样子交给风格</em>。</span><span data-l="en" lang="en">Just the words; <em>the look does the rest</em>.</span></h2>
+      </div>
+      <p class="lede"><span data-l="zh">「内容」面板里只有频道、标题、副标题和角标。配色、版式、字效都由档案和风格决定，你只管这一期写什么。</span><span data-l="en" lang="en">The Content sheet asks for a channel, a title, a subtitle and a corner tag — nothing else. Colours, layout and lettering come from the profile and the look; you only say what this episode is about.</span></p>
+    </div>
+    <figure class="shot reveal">
+      <div class="frame-img">
+        <picture>
+          <source type="image/avif" srcset="assets/img/ui/ui-editor-zh-2400.avif" data-en-srcset="assets/img/ui/ui-editor-en-2400.avif" media="(min-width: 700px)">
+          <img src="assets/img/ui/ui-editor-zh-1280.webp" srcset="assets/img/ui/ui-editor-zh-1280.webp 1280w, assets/img/ui/ui-editor-zh-2400.webp 2400w" data-en-src="assets/img/ui/ui-editor-en-1280.webp" data-en-srcset="assets/img/ui/ui-editor-en-1280.webp 1280w, assets/img/ui/ui-editor-en-2400.webp 2400w" sizes="(max-width: 1290px) 96vw, 1240px" width="2400" height="1500" loading="lazy" decoding="async" alt="SmedCover 编辑器截图：左边是内容面板，中间是画布上的 16:9 封面，下面是所有尺寸的缩略图" data-en-alt="Screenshot of SmedCover's editor: the Content sheet on the left, the 16:9 cover on the canvas, and every size's thumbnail below">
+        </picture>
+      </div>
+      <span class="callout" style="left:20.5%;top:25.7%" aria-hidden="true">1</span>
+      <span class="callout" style="left:25%;top:35.2%" aria-hidden="true">2</span>
+      <span class="callout" style="left:39%;top:87.4%" aria-hidden="true">3</span>
+      <span class="callout" style="left:80.75%;top:94%" aria-hidden="true">4</span>
+      <span class="callout" style="left:89%;top:8.4%" aria-hidden="true">5</span>
+      <figcaption class="caption"><span data-l="zh">SmedCover 的编辑器（截图，示例档案 Pixel Harbor）。</span><span data-l="en" lang="en">SmedCover's editor (screenshot, with the sample profile Pixel Harbor).</span></figcaption>
+    </figure>
+    <ol class="legend">
+      <li><b><span data-l="zh">频道</span><span data-l="en" lang="en">Channel</span></b><span data-l="zh">每个频道有自己的名称、主色和图形，封面的配色跟着频道走。</span><span data-l="en" lang="en">Each channel has its own name, colour and graphic; the cover takes its colours from it.</span></li>
+      <li><b><span data-l="zh">标题</span><span data-l="en" lang="en">Title</span></b><span data-l="zh">输入框里的一行就是封面上的一行；<code>*星号*</code>包住的词显示为频道主色。</span><span data-l="en" lang="en">One line here is one line on the cover; words in <code>*asterisks*</code> take the channel colour.</span></li>
+      <li><b><span data-l="zh">所有尺寸</span><span data-l="en" lang="en">Every size</span></b><span data-l="zh">每个输出尺寸一张缩略图，点一下就在画布上看它。</span><span data-l="en" lang="en">A thumbnail for every size you export; click one to see it on the canvas.</span></li>
+      <li><b><span data-l="zh">调整范围</span><span data-l="en" lang="en">Applies to</span></b><span data-l="zh">拖动和缩放作用于所有尺寸、同方向的尺寸，或只这一个。</span><span data-l="en" lang="en">A move or resize applies to every size, the sizes facing the same way, or this one alone.</span></li>
+      <li><b><span data-l="zh">你看着办 · 导出</span><span data-l="en" lang="en">Surprise me · Export</span></b><span data-l="zh">按空格随机抽六手；⌘E 导出所有打开的尺寸。</span><span data-l="en" lang="en">Space deals six hands; ⌘E exports every size that is ticked.</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ EP.01 SIZES ============ -->
+<section class="section" id="sizes" aria-labelledby="sizes-h">
+  <div class="wrap">
+    <div class="sizes-grid">
+      <div>
+        <p class="tag"><span class="tag-ep">EP.01</span><span class="tag-name"><span data-l="zh">尺寸</span><span data-l="en" lang="en">Sizes</span></span></p>
+        <h2 class="h2" id="sizes-h"><span data-l="zh">一张封面，<em>六个尺寸</em>。</span><span data-l="en" lang="en">One cover, <em>six sizes</em>.</span></h2>
+        <p class="lede"><span data-l="zh">横版、竖版、方形各有自己的版式：16:9 左右排，3:4 上下排，方形用细通栏。在一个尺寸上拖动、缩放，按「调整范围」带到其他尺寸；导出时，档案要的尺寸一次全部写出来。</span><span data-l="en" lang="en">Wide, tall and square each get a layout of their own — side by side at 16:9, stacked at 3:4, a slim banner on the square. Move or resize something on one size and <i>Applies to</i> carries it to the others; Export writes every size the profile wants in one go.</span></p>
+
+        <div class="picker" id="picker">
+          <h3><span data-l="zh">你发哪些平台？</span><span data-l="en" lang="en">Where do you post?</span></h3>
+          <div class="chips" role="group" aria-label="平台" data-en-aria-label="Platforms">
+            <button type="button" class="chip" data-p="bili" aria-pressed="true"><span data-l="zh">B站</span><span data-l="en">Bilibili</span></button>
+            <button type="button" class="chip" data-p="youtube" aria-pressed="true">YouTube</button>
+            <button type="button" class="chip" data-p="douyin" aria-pressed="true"><span data-l="zh">抖音</span><span data-l="en">Douyin</span></button>
+            <button type="button" class="chip" data-p="red" aria-pressed="true"><span data-l="zh">小红书</span><span data-l="en">RED</span></button>
+            <button type="button" class="chip" data-p="channels" aria-pressed="true"><span data-l="zh">视频号</span><span data-l="en">WeChat Channels</span></button>
+            <button type="button" class="chip" data-p="mp" aria-pressed="true"><span data-l="zh">公众号</span><span data-l="en">WeChat article</span></button>
+          </div>
+          <div class="row">
+            <span><span data-l="zh">视频是</span><span data-l="en" lang="en">The video is</span></span>
+            <div class="seg" role="radiogroup" aria-label="视频方向" data-en-aria-label="Video orientation" id="orient">
+              <button type="button" role="radio" aria-checked="true" data-v="h"><span data-l="zh">横版</span><span data-l="en">Landscape</span></button>
+              <button type="button" role="radio" aria-checked="false" data-v="v"><span data-l="zh">竖版</span><span data-l="en">Portrait</span></button>
+            </div>
+          </div>
+          <div class="row" id="red-row">
+            <span><span data-l="zh">小红书用</span><span data-l="en" lang="en">RED takes</span></span>
+            <div class="seg" role="radiogroup" aria-label="小红书封面比例" data-en-aria-label="RED cover ratio" id="red-ratio">
+              <button type="button" role="radio" aria-checked="true" data-v="3:4">3:4</button>
+              <button type="button" role="radio" aria-checked="false" data-v="4:3">4:3</button>
+              <button type="button" role="radio" aria-checked="false" data-v="1:1">1:1</button>
+            </div>
+          </div>
+          <p class="result" id="picker-result" aria-live="polite"></p>
+          <p class="note" style="margin-top:10px"><span data-l="zh">各平台要的封面比例，已在手机上传页上逐个核对。</span><span data-l="en" lang="en">The ratios each platform wants were checked on its upload page, on a phone.</span></p>
+        </div>
+      </div>
+
+      <div class="sheet reveal" id="sheet" aria-label="同一张封面导出的六个文件" data-en-aria-label="The six files exported from one cover">
+        <figure class="s-16x9" data-ratio="16:9"><div class="pic"><img src="assets/img/hero/cel-16x9-sm.webp" width="900" height="506" loading="lazy" decoding="async" alt="16:9 封面" data-en-alt="The 16:9 cover"></div><figcaption><b>16:9</b>01-街拍日记_雨夜东京漫步_1920x1080@2x.png</figcaption></figure>
+        <figure class="s-4x3" data-ratio="4:3"><div class="pic"><img src="assets/img/hero/cel-4x3-sm.webp" width="900" height="675" loading="lazy" decoding="async" alt="4:3 封面" data-en-alt="The 4:3 cover"></div><figcaption><b>4:3</b>01-街拍日记_雨夜东京漫步_1600x1200@2x.png</figcaption></figure>
+        <figure class="s-3x4" data-ratio="3:4"><div class="pic"><img src="assets/img/hero/cel-3x4-sm.webp" width="675" height="900" loading="lazy" decoding="async" alt="3:4 封面" data-en-alt="The 3:4 cover"></div><figcaption><b>3:4</b>01-街拍日记_雨夜东京漫步_1200x1600@2x.png</figcaption></figure>
+        <figure class="s-9x16" data-ratio="9:16"><div class="pic"><img src="assets/img/hero/cel-9x16-sm.webp" width="506" height="900" loading="lazy" decoding="async" alt="9:16 封面" data-en-alt="The 9:16 cover"></div><figcaption><b>9:16</b>…_1080x1920@2x.png</figcaption></figure>
+        <figure class="s-1x1" data-ratio="1:1"><div class="pic"><img src="assets/img/hero/cel-1x1-sm.webp" width="900" height="900" loading="lazy" decoding="async" alt="1:1 封面" data-en-alt="The 1:1 cover"></div><figcaption><b>1:1</b>01-街拍日记_雨夜东京漫步_1200x1200@2x.png</figcaption></figure>
+        <figure class="s-2.35x1" data-ratio="2.35:1"><div class="pic"><img src="assets/img/hero/cel-2.35x1-sm.webp" width="900" height="383" loading="lazy" decoding="async" alt="2.35:1 封面" data-en-alt="The 2.35:1 cover"></div><figcaption><b>2.35:1</b>01-街拍日记_雨夜东京漫步_900x383@2x.png</figcaption></figure>
+      </div>
+    </div>
+
+    <h3 class="standards-head"><span data-l="zh">版式自己守着几条规矩，放进信息流就看得清。</span><span data-l="en" lang="en">The layouts keep a few rules, so a cover reads in the feed as it comes.</span></h3>
+    <div class="standards">
+      <div>
+        <p class="fig">14%</p>
+        <h3><span data-l="zh">不被平台角标挡住</span><span data-l="en" lang="en">Nothing under the badges</span></h3>
+        <p><span data-l="zh">B站和 YouTube 会在横版封面底边两角盖上时长和播放量，标题、角标、频道名都待在这条带子上面；其他尺寸的文字也不进底部 14%。</span><span data-l="en" lang="en">Bilibili and YouTube lay the duration and play count over a landscape cover's bottom corners; the title, tag and channel name stay above that strip. On other sizes, no words go into the bottom 14%.</span></p>
+      </div>
+      <div>
+        <p class="fig">14PX</p>
+        <h3><span data-l="zh">最窄的信息流里也看得清</span><span data-l="en" lang="en">Readable in the narrowest feed</span></h3>
+        <p><span data-l="zh">按最窄的信息流算，标题也不小于 14px：抖音主页网格里 3:4 封面只有约 128px 宽，YouTube 侧栏里 16:9 封面约 168px。</span><span data-l="en" lang="en">Sized for the narrowest feed, a title stays at 14 px or more — Douyin's grid shows a 3:4 cover about 128 px wide, YouTube's side list a 16:9 one about 168 px.</span></p>
+      </div>
+      <div>
+        <p class="fig">6–8</p>
+        <h3><span data-l="zh">一行 6～8 个字最好</span><span data-l="en" lang="en">Six to eight characters a line</span></h3>
+        <p><span data-l="zh">字越多，字号越小；有副标题时两者放不下，副标题先变小。</span><span data-l="en" lang="en">The longer a line, the smaller it is set; when a subtitle and the title don't both fit, the subtitle shrinks first.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EP.02 LOOKS ============ -->
+<section class="section" id="looks" aria-labelledby="looks-h">
+  <div class="wrap">
+    <p class="tag"><span class="tag-ep">EP.02</span><span class="tag-name"><span data-l="zh">风格</span><span data-l="en" lang="en">Looks</span></span></p>
+    <h2 class="h2" id="looks-h"><span data-l="zh"><em>35 种风格</em>，换一下就是另一张。</span><span data-l="en" lang="en"><em>35 looks</em>. Switch, and it's another cover.</span></h2>
+    <p class="lede"><span data-l="zh">风格决定整张封面怎么画：背景、色块、标题和其他文字、频道图形一起换；内容、位置和图层都不变，随时切回来。下面每一张都是同一张封面，只换了风格。</span><span data-l="en" lang="en">A look decides how the whole cover is drawn — the ground, the colour block, the lettering and the channel graphic change together, while the words, places and layers stay put. Every picture below is the same cover in another look.</span></p>
+
+    <div class="looks-top">
+      <div class="look-stage reveal">
+        <div class="pic" id="look-pic">
+          <img id="look-img" src="assets/img/looks/cel-lg.webp" width="1120" height="630" loading="lazy" decoding="async" alt="「赛璐珞」风格的封面" data-en-alt="The cover in the Cel look">
+        </div>
+        <span class="marks" aria-hidden="true"></span>
+      </div>
+      <div class="look-info" aria-live="polite" id="look-info">
+        <p class="k" id="look-kinds"><span><span data-l="zh">插画</span><span data-l="en">Illustration</span></span></p>
+        <p class="name" id="look-name"><span data-l="zh">赛璐珞</span><span data-l="en" lang="en">Cel</span></p>
+        <p class="alt" id="look-alt"><span data-l="zh">CEL</span><span data-l="en">赛璐珞</span></p>
+        <p class="for" id="look-for"><span data-l="zh">适合知识、测评、开箱、日常 vlog</span><span data-l="en" lang="en">For explainers, reviews, unboxings, everyday vlogs</span></p>
+        <p class="count" id="look-count">01 / 35</p>
+      </div>
+    </div>
+
+    <div class="looks-filter" role="group" aria-label="按类别筛选" data-en-aria-label="Filter by kind" id="looks-filter">
+      <button type="button" class="chip" data-kind="all" aria-pressed="true"><span data-l="zh">全部</span><span data-l="en">All</span> <span class="n">35</span></button>
+      <button type="button" class="chip" data-kind="night" aria-pressed="false"><span data-l="zh">夜景</span><span data-l="en">Night</span> <span class="n">7</span></button>
+      <button type="button" class="chip" data-kind="illustration" aria-pressed="false"><span data-l="zh">插画</span><span data-l="en">Illustration</span> <span class="n">13</span></button>
+      <button type="button" class="chip" data-kind="poster" aria-pressed="false"><span data-l="zh">海报</span><span data-l="en">Poster</span> <span class="n">10</span></button>
+      <button type="button" class="chip" data-kind="print" aria-pressed="false"><span data-l="zh">印刷</span><span data-l="en">Print</span> <span class="n">7</span></button>
+      <button type="button" class="chip" data-kind="experimental" aria-pressed="false"><span data-l="zh">实验</span><span data-l="en">Experimental</span> <span class="n">8</span></button>
+      <span class="hint"><span data-l="zh">鼠标停在卡片上预览，点一下固定——和应用里一样。</span><span data-l="en" lang="en">Hover a card to preview it, click to keep it — as in the app.</span></span>
+    </div>
+    <ul class="looks-grid" id="looks-grid" role="list">
+          <li data-kinds="illustration"><button type="button" class="look" data-look="cel" aria-pressed="true"><img src="assets/img/looks/cel-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">赛璐珞</span><span data-l="en" lang="en">Cel</span></span></button></li>
+          <li data-kinds="night experimental"><button type="button" class="look" data-look="cyber" aria-pressed="false"><img src="assets/img/looks/cyber-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">赛博朋克</span><span data-l="en" lang="en">Cyberpunk</span></span></button></li>
+          <li data-kinds="print"><button type="button" class="look" data-look="riso" aria-pressed="false"><img src="assets/img/looks/riso-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">孔版印刷</span><span data-l="en" lang="en">Risograph</span></span></button></li>
+          <li data-kinds="illustration"><button type="button" class="look" data-look="anime" aria-pressed="false"><img src="assets/img/looks/anime-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">九十年代动画</span><span data-l="en" lang="en">90s animation</span></span></button></li>
+          <li data-kinds="print"><button type="button" class="look" data-look="bluenote" aria-pressed="false"><img src="assets/img/looks/bluenote-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">蓝调唱片</span><span data-l="en" lang="en">Record sleeve</span></span></button></li>
+          <li data-kinds="print"><button type="button" class="look" data-look="editorial" aria-pressed="false"><img src="assets/img/looks/editorial-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">编辑设计</span><span data-l="en" lang="en">Editorial</span></span></button></li>
+          <li data-kinds="print"><button type="button" class="look" data-look="songke" aria-pressed="false"><img src="assets/img/looks/songke-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">宋版刻本</span><span data-l="en" lang="en">Woodblock book</span></span></button></li>
+          <li data-kinds="illustration"><button type="button" class="look" data-look="vivid" aria-pressed="false"><img src="assets/img/looks/vivid-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">夏日插画</span><span data-l="en" lang="en">Summer illustration</span></span></button></li>
+          <li data-kinds="poster"><button type="button" class="look" data-look="negative" aria-pressed="false"><img src="assets/img/looks/negative-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">负形海报</span><span data-l="en" lang="en">Negative space</span></span></button></li>
+          <li data-kinds="poster"><button type="button" class="look" data-look="cinema" aria-pressed="false"><img src="assets/img/looks/cinema-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">极简电影</span><span data-l="en" lang="en">Minimal film poster</span></span></button></li>
+          <li data-kinds="print"><button type="button" class="look" data-look="cyano" aria-pressed="false"><img src="assets/img/looks/cyano-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">蓝晒光影</span><span data-l="en" lang="en">Cyanotype</span></span></button></li>
+          <li data-kinds="print"><button type="button" class="look" data-look="monofilm" aria-pressed="false"><img src="assets/img/looks/monofilm-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">黑白胶片</span><span data-l="en" lang="en">Monochrome film</span></span></button></li>
+          <li data-kinds="poster experimental"><button type="button" class="look" data-look="typo" aria-pressed="false"><img src="assets/img/looks/typo-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">实验字体</span><span data-l="en" lang="en">Experimental type</span></span></button></li>
+          <li data-kinds="poster"><button type="button" class="look" data-look="toon" aria-pressed="false"><img src="assets/img/looks/toon-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">动画海报</span><span data-l="en" lang="en">Animated film poster</span></span></button></li>
+          <li data-kinds="poster experimental"><button type="button" class="look" data-look="avant" aria-pressed="false"><img src="assets/img/looks/avant-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">先锋影像</span><span data-l="en" lang="en">Avant-garde image</span></span></button></li>
+          <li data-kinds="experimental"><button type="button" class="look" data-look="collage" aria-pressed="false"><img src="assets/img/looks/collage-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">拼贴艺术</span><span data-l="en" lang="en">Collage</span></span></button></li>
+          <li data-kinds="poster"><button type="button" class="look" data-look="yellow" aria-pressed="false"><img src="assets/img/looks/yellow-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">明黄海报</span><span data-l="en" lang="en">Yellow poster</span></span></button></li>
+          <li data-kinds="poster"><button type="button" class="look" data-look="pitch" aria-pressed="false"><img src="assets/img/looks/pitch-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">绿茵球场</span><span data-l="en" lang="en">Pitch</span></span></button></li>
+          <li data-kinds="night experimental"><button type="button" class="look" data-look="dots" aria-pressed="false"><img src="assets/img/looks/dots-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">点阵光影</span><span data-l="en" lang="en">Dot matrix</span></span></button></li>
+          <li data-kinds="night illustration"><button type="button" class="look" data-look="neon" aria-pressed="false"><img src="assets/img/looks/neon-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">霓虹波普</span><span data-l="en" lang="en">Neon pop</span></span></button></li>
+          <li data-kinds="poster"><button type="button" class="look" data-look="court" aria-pressed="false"><img src="assets/img/looks/court-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">篮球海报</span><span data-l="en" lang="en">Basketball poster</span></span></button></li>
+          <li data-kinds="illustration"><button type="button" class="look" data-look="velvet" aria-pressed="false"><img src="assets/img/looks/velvet-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">绒感插画</span><span data-l="en" lang="en">Velvet illustration</span></span></button></li>
+          <li data-kinds="night poster"><button type="button" class="look" data-look="rave" aria-pressed="false"><img src="assets/img/looks/rave-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">迷幻派对</span><span data-l="en" lang="en">Psychedelic rave</span></span></button></li>
+          <li data-kinds="experimental"><button type="button" class="look" data-look="chrome" aria-pressed="false"><img src="assets/img/looks/chrome-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">液态铬</span><span data-l="en" lang="en">Liquid chrome</span></span></button></li>
+          <li data-kinds="experimental"><button type="button" class="look" data-look="netart" aria-pressed="false"><img src="assets/img/looks/netart-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">故障网络</span><span data-l="en" lang="en">Glitch net art</span></span></button></li>
+          <li data-kinds="illustration"><button type="button" class="look" data-look="verse" aria-pressed="false"><img src="assets/img/looks/verse-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">漫画宇宙</span><span data-l="en" lang="en">Comic-verse</span></span></button></li>
+          <li data-kinds="illustration"><button type="button" class="look" data-look="glass" aria-pressed="false"><img src="assets/img/looks/glass-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">压花玻璃</span><span data-l="en" lang="en">Patterned glass</span></span></button></li>
+          <li data-kinds="illustration"><button type="button" class="look" data-look="jelly" aria-pressed="false"><img src="assets/img/looks/jelly-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">果冻机械</span><span data-l="en" lang="en">Jelly machine</span></span></button></li>
+          <li data-kinds="illustration"><button type="button" class="look" data-look="skies" aria-pressed="false"><img src="assets/img/looks/skies-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">动画晴空</span><span data-l="en" lang="en">Anime skies</span></span></button></li>
+          <li data-kinds="print experimental"><button type="button" class="look" data-look="spectrum" aria-pressed="false"><img src="assets/img/looks/spectrum-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">光谱版画</span><span data-l="en" lang="en">Spectral engraving</span></span></button></li>
+          <li data-kinds="night illustration"><button type="button" class="look" data-look="citypop" aria-pressed="false"><img src="assets/img/looks/citypop-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">都市夜曲</span><span data-l="en" lang="en">City pop night</span></span></button></li>
+          <li data-kinds="poster"><button type="button" class="look" data-look="construct" aria-pressed="false"><img src="assets/img/looks/construct-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">构成主义</span><span data-l="en" lang="en">Constructivist</span></span></button></li>
+          <li data-kinds="night illustration"><button type="button" class="look" data-look="deco" aria-pressed="false"><img src="assets/img/looks/deco-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">暗黑装饰</span><span data-l="en" lang="en">Dark deco</span></span></button></li>
+          <li data-kinds="illustration"><button type="button" class="look" data-look="wasteland" aria-pressed="false"><img src="assets/img/looks/wasteland-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">寂静荒原</span><span data-l="en" lang="en">Silent wasteland</span></span></button></li>
+          <li data-kinds="night illustration"><button type="button" class="look" data-look="facet" aria-pressed="false"><img src="assets/img/looks/facet-sm.webp" width="480" height="270" loading="lazy" decoding="async" alt=""><span class="look-name"><span data-l="zh" lang="zh-CN">折面夜雨</span><span data-l="en" lang="en">Origami noir</span></span></button></li>
+    </ul>
+    <p class="note looks-foot"><span data-l="zh">每一张都由 SmedCover 渲染：同一个标题、同一个频道、同一套版式，只换了风格（滑条都是默认值）。照片铺满画布时，不少风格还会把照片处理成自己的样子。</span><span data-l="en" lang="en">Every one was rendered by SmedCover: the same title, channel and layout, only the look changed (sliders at their defaults). With a photo filling the canvas, many looks also redraw the photo in their own way.</span></p>
+  </div>
+  <script type="application/json" id="looks-data">[{"id":"cel","zh":"赛璐珞","en":"Cel","k":["illustration"],"fz":"适合知识、测评、开箱、日常 vlog","fe":"For explainers, reviews, unboxings, everyday vlogs"},{"id":"cyber","zh":"赛博朋克","en":"Cyberpunk","k":["night","experimental"],"fz":"适合科技、数码、游戏、夜景与城市","fe":"For tech, gadgets, games, night and city"},{"id":"riso","zh":"孔版印刷","en":"Risograph","k":["print"],"fz":"适合设计、阅读、生活方式、手作与小店","fe":"For design, books, lifestyle, crafts, small shops"},{"id":"anime","zh":"九十年代动画","en":"90s animation","k":["illustration"],"fz":"适合旅行、音乐、回忆、季节与日常","fe":"For travel, music, memories, seasons, everyday life"},{"id":"bluenote","zh":"蓝调唱片","en":"Record sleeve","k":["print"],"fz":"适合音乐、访谈、人物、品牌故事","fe":"For music, interviews, portraits, brand stories"},{"id":"editorial","zh":"编辑设计","en":"Editorial","k":["print"],"fz":"适合深度内容、评论、读书、文化与系列栏目","fe":"For long-form, essays, books, culture, series"},{"id":"songke","zh":"宋版刻本","en":"Woodblock book","k":["print"],"fz":"适合历史、国学、读书、传统手艺与节气","fe":"For history, classics, reading, traditional crafts, the seasons"},{"id":"vivid","zh":"夏日插画","en":"Summer illustration","k":["illustration"],"fz":"适合旅行、城市漫步、生活、美食、节日与治愈系内容","fe":"For travel, city walks, everyday life, food, festivals and feel-good content"},{"id":"negative","zh":"负形海报","en":"Negative space","k":["poster"],"fz":"适合电影、书评、社会议题、悬疑与观点类内容","fe":"For film, books, social issues, mysteries, opinion"},{"id":"cinema","zh":"极简电影","en":"Minimal film poster","k":["poster"],"fz":"适合影评、书评、人物故事、纪录片与情绪向内容","fe":"For film and book reviews, portraits, documentaries, mood pieces"},{"id":"cyano","zh":"蓝晒光影","en":"Cyanotype","k":["print"],"fz":"适合科学、宇宙、自然、诗意与情绪向内容","fe":"For science, space, nature, poetry and mood pieces"},{"id":"monofilm","zh":"黑白胶片","en":"Monochrome film","k":["print"],"fz":"适合人物、音乐、电影、时尚、随笔与回忆","fe":"For portraits, music, film, fashion, essays and memories"},{"id":"typo","zh":"实验字体","en":"Experimental type","k":["poster","experimental"],"fz":"适合设计、展览、讲座、音乐节、科技与观点类内容","fe":"For design, exhibitions, talks, festivals, tech and opinion"},{"id":"toon","zh":"动画海报","en":"Animated film poster","k":["poster"],"fz":"适合动画、亲子、旅行、成长、治愈和节日内容","fe":"For animation, family, travel, growing up, feel-good and festive content"},{"id":"avant","zh":"先锋影像","en":"Avant-garde image","k":["poster","experimental"],"fz":"适合设计、时尚、科技、人物、观点和品牌内容","fe":"For design, fashion, tech, portraits, opinion and brand content"},{"id":"collage","zh":"拼贴艺术","en":"Collage","k":["experimental"],"fz":"适合设计、潮流、艺术、观点、生活方式和年轻向内容","fe":"For design, fashion, art, opinion, lifestyle and youth content"},{"id":"yellow","zh":"明黄海报","en":"Yellow poster","k":["poster"],"fz":"适合活动、展演、电影、讲座、课程和品牌宣传","fe":"For events, shows, films, talks, courses and brand campaigns"},{"id":"pitch","zh":"绿茵球场","en":"Pitch","k":["poster"],"fz":"适合体育、赛事、球评、健身、团队和校园活动","fe":"For sport, matches, commentary, fitness, teams and school events"},{"id":"dots","zh":"点阵光影","en":"Dot matrix","k":["night","experimental"],"fz":"适合科技、音乐、电子、夜景、AI 和数据类内容","fe":"For tech, music, electronic, night scenes, AI and data"},{"id":"neon","zh":"霓虹波普","en":"Neon pop","k":["night","illustration"],"fz":"适合音乐、潮流、游戏、夜生活、悬疑和人物内容","fe":"For music, fashion, games, nightlife, mystery and portraits"},{"id":"court","zh":"篮球海报","en":"Basketball poster","k":["poster"],"fz":"篮球海报：校队球衣式的大号数字、网点篮球和丝网斑驳","fe":"A basketball poster: a varsity number, a halftone ball and a worn screen print"},{"id":"velvet","zh":"绒感插画","en":"Velvet illustration","k":["illustration"],"fz":"适合时尚、生活方式、潮玩、节日和女性向内容","fe":"For fashion, lifestyle, designer toys, festive and feminine content"},{"id":"rave","zh":"迷幻派对","en":"Psychedelic rave","k":["night","poster"],"fz":"适合音乐、派对、电子、潮流、夜生活和科幻内容","fe":"For music, parties, electronic, fashion, nightlife and sci-fi"},{"id":"chrome","zh":"液态铬","en":"Liquid chrome","k":["experimental"],"fz":"适合科技、AI、电子音乐、潮流、游戏和观点类内容","fe":"For tech, AI, electronic music, fashion, games and opinion"},{"id":"netart","zh":"故障网络","en":"Glitch net art","k":["experimental"],"fz":"适合科技、互联网文化、游戏、实验音乐和观点类内容","fe":"For tech, internet culture, games, experimental music and opinion"},{"id":"verse","zh":"漫画宇宙","en":"Comic-verse","k":["illustration"],"fz":"适合动画、游戏、潮流、音乐、青年文化和娱乐类内容","fe":"For animation, games, street fashion, music, youth culture and entertainment"},{"id":"glass","zh":"压花玻璃","en":"Patterned glass","k":["illustration"],"fz":"适合情感、生活、居家、回忆、艺术和电台类内容","fe":"For feelings, everyday life, home, memories, art and radio"},{"id":"jelly","zh":"果冻机械","en":"Jelly machine","k":["illustration"],"fz":"适合科技、潮玩、音乐、电子、游戏和产品类内容","fe":"For tech, designer toys, music, electronics, games and products"},{"id":"skies","zh":"动画晴空","en":"Anime skies","k":["illustration"],"fz":"适合旅行、城市、日常、青春、音乐和治愈系内容","fe":"For travel, cities, everyday life, youth, music and feel-good content"},{"id":"spectrum","zh":"光谱版画","en":"Spectral engraving","k":["print","experimental"],"fz":"适合艺术、设计、音乐、哲思、科技与自然类内容","fe":"For art, design, music, ideas, science and nature"},{"id":"citypop","zh":"都市夜曲","en":"City pop night","k":["night","illustration"],"fz":"适合音乐、夜生活、城市、情感、复古与动画内容","fe":"For music, nightlife, cities, feelings, retro and animation"},{"id":"construct","zh":"构成主义","en":"Constructivist","k":["poster"],"fz":"适合科技、工业、建筑、历史、军事、城市、设计与观点类内容","fe":"For technology, industry, architecture, history, the military, cities, design and opinion"},{"id":"deco","zh":"暗黑装饰","en":"Dark deco","k":["night","illustration"],"fz":"适合城市、夜生活、悬疑推理、历史人文、电影解读、音乐与奢华品类","fe":"For cities, nightlife, mysteries, history, film, music and luxury"},{"id":"wasteland","zh":"寂静荒原","en":"Silent wasteland","k":["illustration"],"fz":"适合科幻、游戏、末日题材、纪录与人文、电影解读、旅行和情绪类内容","fe":"For sci-fi, games, the end of the world, documentaries, film essays, travel and moody pieces"},{"id":"facet","zh":"折面夜雨","en":"Origami noir","k":["night","illustration"],"fz":"适合科幻、悬疑、城市、科技、影评、深夜与情绪类内容","fe":"For science fiction, mystery, cities, technology, film, late nights and mood"}]</script>
+</section>
+
+<!-- ============ EP.03 SURPRISE ME ============ -->
+<section class="section deal-band" id="surprise" aria-labelledby="deal-h">
+  <div class="wrap">
+    <div class="deal-head">
+      <div>
+        <p class="tag"><span class="tag-ep">EP.03</span><span class="tag-name"><span data-l="zh">你看着办</span><span data-l="en" lang="en">Surprise me</span></span></p>
+        <h2 class="h2" id="deal-h"><span data-l="zh">没灵感？按<em>空格</em>。</span><span data-l="en" lang="en">Stuck? Press <em>Space</em>.</span></h2>
+        <p class="lede"><span data-l="zh">「你看着办」把这张封面怎么画重新随机一遍：风格和它的滑条、深浅底、标题的文字效果和变形、你加的图层摆在哪……一次抽六手，每手一个不同的风格。点一手放到画布上；不满意就再抽，或者撤销回去。</span><span data-l="en" lang="en">Surprise me re-deals how the cover is drawn — the look and its sliders, the ground, the title's lettering and bend, where your own layers sit. It deals six hands at once, each in a different look; click one to put it on the canvas, deal again, or undo.</span></p>
+      </div>
+      <div class="space-key" aria-hidden="true">SPACE<small>空格</small></div>
+    </div>
+    <ol class="hands" id="hands" role="list" aria-live="polite"></ol>
+    <noscript><p class="note" style="margin-top:20px">（需要 JavaScript 显示抽出的六手。）</p></noscript>
+    <div class="deal-foot">
+      <button type="button" class="deal-btn" id="deal-btn"><span data-l="zh">再抽一次</span><span data-l="en" lang="en">Deal again</span> <span class="kbd" aria-hidden="true"><span data-l="zh">空格</span><span data-l="en">Space</span></span></button>
+      <p class="note"><span data-l="zh">这几手都是在 SmedCover 里真实抽出来的（预先存好，网页里轮流展示），尺寸是抖音 / 小红书 / 视频号用的 3:4。</span><span data-l="en" lang="en">These hands were really dealt in SmedCover (saved beforehand; the page takes turns showing them), at 3:4 — the size Douyin, RED and WeChat Channels use.</span></p>
+    </div>
+    <div class="locks" aria-label="可以锁住的项目" data-en-aria-label="What you can lock">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg><span data-l="zh">风格</span><span data-l="en">Look</span></span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg><span data-l="zh">深浅底</span><span data-l="en">Ground</span></span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg><span data-l="zh">文字效果</span><span data-l="en">Lettering</span></span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg><span data-l="zh">位置</span><span data-l="en">Places</span></span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg><span data-l="zh">版式</span><span data-l="en">Layout</span></span>
+    </div>
+    <p class="note" style="margin-top:10px"><span data-l="zh">锁住的项目再抽时保持不变；每一项被抽中的概率也能自己调。</span><span data-l="en" lang="en">Whatever you lock stays as it is when you deal again; you can also set how likely each choice is.</span></p>
+  </div>
+  <script type="application/json" id="deals-data">[[{"l":"verse","s":["深底","磨损","底边色带"]},{"l":"collage","s":["深底","风格自己的字","底边色带"]},{"l":"pitch","s":["浅底","风格自己的字","底边色带"]},{"l":"avant","s":["深底","风格自己的字","底边色带"]},{"l":"songke","s":["内阴影","底边色带"]},{"l":"velvet","s":["深底","风格自己的字","底边色带"]}],[{"l":"cel","s":["浅底","风格自己的字","底边色带"]},{"l":"facet","s":["深底","磨损","底边色带"]},{"l":"neon","s":["浅底","风格自己的字","底边色带"]},{"l":"citypop","s":["风格自己的字","底边色带"]},{"l":"jelly","s":["浅底","风格自己的字","底边色带"]},{"l":"netart","s":["深底","风格自己的字","底边色带"]}],[{"l":"cyano","s":["浅底","描边加投影","底边色带"]},{"l":"bluenote","s":["深底","风格自己的字","底边色带"]},{"l":"typo","s":["深底","风格自己的字","底边色带"]},{"l":"wasteland","s":["深底","风格自己的字","底边色带"]},{"l":"cel","s":["深底","风格自己的字","底边色带"]},{"l":"vivid","s":["贴纸字","底边色带"]}]]</script>
+</section>
+
+<!-- ============ EP.04 LETTERING ============ -->
+<section class="section" id="lettering" aria-labelledby="letters-h">
+  <div class="wrap">
+    <p class="tag"><span class="tag-ep">EP.04</span><span class="tag-name"><span data-l="zh">字</span><span data-l="en" lang="en">Lettering</span></span></p>
+    <h2 class="h2" id="letters-h"><span data-l="zh">中文标题，按<em>中文的规矩</em>排。</span><span data-l="en" lang="en">Chinese titles, set by <em>Chinese rules</em>.</span></h2>
+    <p class="lede"><span data-l="zh">每一行按中文标题的排版规矩来：挨着汉字的西文和数字放大到和汉字一样高，标点按「开明式」挤压，行首行尾的标点不留空白。标题、副标题和你加的文字，都能单独换文字效果，再叠一种变形。</span><span data-l="en" lang="en">Each line is set the way Chinese titles are: Latin letters and numerals beside the hanzi scaled to stand as tall, punctuation squeezed in the Kaiming style, no blank space at either end of a line. The title, subtitle and any text you add can each take their own text effect, with a bend on top.</span></p>
+    <div class="letters">
+      <div>
+        <ul class="fx-grid" role="list">
+          <li><figure><img src="assets/img/fx/auto.webp" width="720" height="278" loading="lazy" decoding="async" alt=""><figcaption><span data-l="zh">跟随风格</span><span data-l="en">The look's own</span><span>AUTO</span></figcaption></figure></li>
+          <li><figure><img src="assets/img/fx/sticker.webp" width="720" height="278" loading="lazy" decoding="async" alt=""><figcaption><span data-l="zh">贴纸字</span><span data-l="en">Sticker</span><span>STICKER</span></figcaption></figure></li>
+          <li><figure><img src="assets/img/fx/ransom.webp" width="720" height="278" loading="lazy" decoding="async" alt=""><figcaption><span data-l="zh">剪报字</span><span data-l="en">Ransom note</span><span>RANSOM</span></figcaption></figure></li>
+          <li><figure><img src="assets/img/fx/dots.webp" width="720" height="278" loading="lazy" decoding="async" alt=""><figcaption><span data-l="zh">字内网点</span><span data-l="en">Halftone inside</span><span>DOTS</span></figcaption></figure></li>
+          <li><figure><img src="assets/img/fx/stripes.webp" width="720" height="278" loading="lazy" decoding="async" alt=""><figcaption><span data-l="zh">字内条纹</span><span data-l="en">Stripes inside</span><span>STRIPES</span></figcaption></figure></li>
+          <li><figure><img src="assets/img/fx/inner.webp" width="720" height="278" loading="lazy" decoding="async" alt=""><figcaption><span data-l="zh">内阴影</span><span data-l="en">Inner shadow</span><span>INNER</span></figcaption></figure></li>
+          <li><figure><img src="assets/img/fx/worn.webp" width="720" height="278" loading="lazy" decoding="async" alt=""><figcaption><span data-l="zh">磨损</span><span data-l="en">Worn</span><span>WORN</span></figcaption></figure></li>
+          <li><figure><img src="assets/img/fx/rows.webp" width="720" height="278" loading="lazy" decoding="async" alt=""><figcaption><span data-l="zh">逐行错位</span><span data-l="en">Row shift</span><span>ROWS</span></figcaption></figure></li>
+          <li><figure><img src="assets/img/fx/plain.webp" width="720" height="278" loading="lazy" decoding="async" alt=""><figcaption><span data-l="zh">纯文字</span><span data-l="en">Plain</span><span>PLAIN</span></figcaption></figure></li>
+        </ul>
+        <p class="fx-sub"><span data-l="zh">变形 · 共 11 种，还能拖手柄手动调</span><span data-l="en" lang="en">Bends · 11 of them, reshaped by hand with handles</span></p>
+        <ul class="fx-grid" role="list">
+          <li><figure><img src="assets/img/fx/bend-arc.webp" width="720" height="278" loading="lazy" decoding="async" alt=""><figcaption><span data-l="zh">拱形</span><span data-l="en">Arched</span><span>ARC</span></figcaption></figure></li>
+          <li><figure><img src="assets/img/fx/bend-wave.webp" width="720" height="278" loading="lazy" decoding="async" alt=""><figcaption><span data-l="zh">波浪</span><span data-l="en">Wave</span><span>WAVE</span></figcaption></figure></li>
+          <li><figure><img src="assets/img/fx/bend-flag.webp" width="720" height="278" loading="lazy" decoding="async" alt=""><figcaption><span data-l="zh">旗帜</span><span data-l="en">Flag</span><span>FLAG</span></figcaption></figure></li>
+        </ul>
+        <ul class="typeset" role="list">
+          <li><span data-l="zh">还有描边加投影、立体挤出、刺边、撕边、手剪、融化、膨胀、侵蚀等效果；剪报字可以逐字调整。</span><span data-l="en" lang="en">Also outline and shadow, extruded, spiky, torn edge, scissor-cut, melting, puffed up and eaten away; ransom-note letters can be tuned one by one.</span></li>
+          <li><span data-l="zh">强调词（标题里用 <code>*星号*</code> 包住的）显示为频道主色。</span><span data-l="en" lang="en">Highlighted words (in <code>*asterisks*</code> in the title) take the channel colour.</span></li>
+          <li><span data-l="zh">字体：内置 Noto Sans SC、Bebas Neue、JetBrains Mono，也能用电脑上装的字体。</span><span data-l="en" lang="en">Fonts: Noto Sans SC, Bebas Neue and JetBrains Mono come with it, and the fonts installed on your computer work too.</span></li>
+        </ul>
+      </div>
+      <figure class="vertical-card reveal">
+        <img src="assets/img/deal/d1-h5.webp" width="540" height="720" loading="lazy" decoding="async" alt="竖排的标题：宋版刻本风格的 3:4 封面" data-en-alt="A title set vertically: a 3:4 cover in the Woodblock book look">
+        <figcaption><b><span data-l="zh">竖排</span><span data-l="en" lang="en">Vertical</span></b> · <span data-l="zh">像宋版刻本：一行成一列，从右往左读；汉字立着，西文和数字躺倒。所有带字的图层都能竖排。</span><span data-l="en" lang="en">As in a Song-dynasty printed book: each line becomes a column, read right to left; hanzi stand upright, Latin and numerals lie on their side. Every lettering layer can be set this way.</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EP.05 PHOTOS ============ -->
+<section class="section" id="photos" aria-labelledby="photos-h">
+  <div class="wrap split">
+    <figure class="reveal">
+      <div class="framed"><div class="pic"><img src="assets/img/rel/cutout-weave.webp" width="1040" height="585" loading="lazy" decoding="async" alt="封面上两个抠出的人物从标题前面穿过，标题的一部分在人物后面" data-en-alt="Two cut-out figures pass in front of the title, part of the title running behind them"></div>
+      <span class="marks" aria-hidden="true"></span></div>
+      <figcaption class="caption"><span data-l="zh">抠出的主体和标题穿插（画布截图，取自 v0.3.1 的发布说明）。</span><span data-l="en" lang="en">Cut-outs weaving with the title (a canvas screenshot from the v0.3.1 release notes).</span></figcaption>
+    </figure>
+    <div>
+      <p class="tag"><span class="tag-ep">EP.05</span><span class="tag-name"><span data-l="zh">照片</span><span data-l="en" lang="en">Photos</span></span></p>
+      <h2 class="h2" id="photos-h"><span data-l="zh">抠出主体，<em>让它挡住标题</em>。</span><span data-l="en" lang="en">Cut out the subject; <em>let it cross the title</em>.</span></h2>
+      <p class="lede"><span data-l="zh">抠出的主体自动放在标题上面，像杂志封面那样挡住一部分字；再逐字或用画笔决定哪些字在前、哪些在后。抠图在本机完成，照片不上传。</span><span data-l="en" lang="en">A cut-out lands above the title, covering part of it the way a magazine cover does — then choose letter by letter, or with a brush, which parts pass in front. Cutting out runs on your computer; the photo is never uploaded.</span></p>
+      <ul class="feature-list" role="list">
+        <li><span><b><span data-l="zh">本机抠图</span><span data-l="en" lang="en">On-device cut-out</span></b> · <span data-l="zh">Mac 上用系统自带的 Apple Vision（macOS 14 及以上），通常一秒内；Windows 和 Linux 用开源模型 BiRefNet，第一次用前下载一次。</span><span data-l="en" lang="en">Apple Vision on a Mac (macOS 14 and later), usually under a second; the open BiRefNet model on Windows and Linux, downloaded once before first use.</span></span></li>
+        <li><span><b><span data-l="zh">穿插</span><span data-l="en" lang="en">Weave</span></b> · <span data-l="zh">自动（头在字前）、逐字选择，或者用画笔涂；贴纸和图形也能这样穿插。</span><span data-l="en" lang="en">Automatic (the head in front), letter by letter, or painted with a brush; stickers and graphics can weave too.</span></span></li>
+        <li><span><b><span data-l="zh">裁剪与描边</span><span data-l="en" lang="en">Crop and outline</span></b> · <span data-l="zh">常用比例，或用「自由」裁成任意形状；描边可选实线、撕纸边缘、线段。</span><span data-l="en" lang="en">The usual ratios, or Free for any outline; outlines can be solid, torn paper or a dashed cut line.</span></span></li>
+        <li><span><b><span data-l="zh">AI 生成和重绘</span><span data-l="en" lang="en">AI generate and repaint</span></b> · <span data-l="zh">按描述生成一张照片，或把照片重画成另一种画风；一句话生成贴纸和立体图形。</span><span data-l="en" lang="en">Generate a photo from a description, or repaint one in another style; one sentence gives you stickers and 3D graphics.</span></span></li>
+      </ul>
+      <p class="byo"><span data-l="zh">AI 功能接你自己的模型服务：文本模型用 OpenAI 或 Anthropic 风格的接口（官方、中转或本地模型都行），图片模型支持 OpenAI gpt-image、Google Gemini 和火山方舟 Seedream。SmedCover 不自带模型，也不提供账号，费用由你的服务商收取。</span><span data-l="en" lang="en">The AI features use your own model service: an OpenAI- or Anthropic-style API for text (official, a relay or a local model), and OpenAI gpt-image, Google Gemini or Volcengine Seedream for images. SmedCover ships no model and no account; your provider bills you.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EP.06 CHANNELS & BATCH ============ -->
+<section class="section" id="channels" aria-labelledby="channels-h">
+  <div class="wrap">
+    <p class="tag"><span class="tag-ep">EP.06</span><span class="tag-name"><span data-l="zh">频道与批量</span><span data-l="en" lang="en">Channels and batches</span></span></p>
+    <h2 class="h2" id="channels-h"><span data-l="zh">每个栏目一种颜色，<em>一张表出一整批</em>。</span><span data-l="en" lang="en">A colour for every series, <em>a whole batch from one sheet</em>.</span></h2>
+    <p class="lede"><span data-l="zh">档案是一个品牌的全部设置：品牌名、频道、尺寸和一套默认设计，可以存好几套。频道是品牌下的栏目，有自己的名称、主色和图形；每个频道有自己的那张封面，互不影响。</span><span data-l="en" lang="en">A profile holds a brand — its name, channels, sizes and a default design — and you can keep several. A channel is a series under it, with its own name, colour and graphic, and its own cover, untouched by the others.</span></p>
+    <div class="batch">
+      <div>
+        <div class="term">
+          <div class="term-bar"><span>episodes.csv</span><button type="button" class="copy" data-copy="csv"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div>
+<pre id="csv"><span class="c">频道,标题,角标,副标题</span>
+街拍日记,雨夜<span class="hl">*东京*</span>漫步,EP.07,从涩谷走到新宿的一晚
+胶片故事,"一卷 <span class="hl">*Portra 400*</span>\n的夏天",EP.12,海边、旧相机和过期胶卷
+器材测评,"<span class="hl">*50mm*</span> 定焦\n值不值得买",EP.03,三个月实拍之后的答案
+思路拆解,"一张照片的\n<span class="hl">*构图*</span>拆解",EP.21,为什么这张图让人停下来
+动手做,"自己做一个\n<span class="hl">*胶片扫描架*</span>",EP.05,零件清单和图纸都在评论区</pre>
+        </div>
+        <p class="arrow"><span data-l="zh">「导入 CSV 并导出…」</span><span data-l="en" lang="en">Import CSV and export…</span></p>
+        <p class="lede" style="margin-top:0"><span data-l="zh">每行一张封面：用那一行频道自己的封面，换上那一行的文字，按档案要的每个尺寸全部导出。上面这张表，是 5 行 × 6 个尺寸 = 30 张图。标题里用 <code>\n</code> 换行。</span><span data-l="en" lang="en">A cover per row: that row's channel, that row's words, every size the profile wants. The sheet above makes 5 rows × 6 sizes = 30 images. <code>\n</code> breaks a title's line.</span></p>
+      </div>
+      <ul class="feed reveal" role="list">
+        <li><img src="assets/img/channels/shot.webp" width="960" height="540" loading="lazy" decoding="async" alt="街拍日记频道的封面：雨夜东京漫步" data-en-alt="The Street diary channel's cover"><div class="meta"><b style="--c:#fcee0a"><i></i>街拍日记</b>STREET DIARY · <span class="mono">SHOT</span></div></li>
+        <li><img src="assets/img/channels/film.webp" width="960" height="540" loading="lazy" decoding="async" alt="胶片故事频道的封面：一卷 Portra 400 的夏天" data-en-alt="The Film stories channel's cover"><div class="meta"><b style="--c:#fb5607"><i></i>胶片故事</b>FILM STORIES · <span class="mono">FILM</span></div></li>
+        <li><img src="assets/img/channels/test.webp" width="960" height="540" loading="lazy" decoding="async" alt="器材测评频道的封面：50mm 定焦值不值得买" data-en-alt="The Gear review channel's cover"><div class="meta"><b style="--c:#3a86ff"><i></i>器材测评</b>GEAR REVIEW · <span class="mono">TEST</span></div></li>
+        <li><img src="assets/img/channels/brkd.webp" width="960" height="540" loading="lazy" decoding="async" alt="思路拆解频道的封面：一张照片的构图拆解" data-en-alt="The Breakdown channel's cover"><div class="meta"><b style="--c:#a855f7"><i></i>思路拆解</b>BREAKDOWN · <span class="mono">BRKD</span></div></li>
+        <li><img src="assets/img/channels/make.webp" width="960" height="540" loading="lazy" decoding="async" alt="动手做频道的封面：自己做一个胶片扫描架" data-en-alt="The Maker log channel's cover"><div class="meta"><b style="--c:#06d6a0"><i></i>动手做</b>MAKER LOG · <span class="mono">MAKE</span></div></li>
+      </ul>
+    </div>
+    <figure class="shot export-shot reveal">
+      <div class="frame-img">
+        <picture>
+          <source type="image/avif" srcset="assets/img/ui/ui-export-zh-2400.avif" data-en-srcset="assets/img/ui/ui-export-en-2400.avif" media="(min-width: 700px)">
+          <img src="assets/img/ui/ui-export-zh-1280.webp" srcset="assets/img/ui/ui-export-zh-1280.webp 1280w, assets/img/ui/ui-export-zh-2400.webp 2400w" data-en-src="assets/img/ui/ui-export-en-1280.webp" data-en-srcset="assets/img/ui/ui-export-en-1280.webp 1280w, assets/img/ui/ui-export-en-2400.webp 2400w" sizes="(max-width: 1290px) 96vw, 1240px" width="2400" height="1500" loading="lazy" decoding="async" alt="导出窗口截图：六个尺寸各一行，下面是格式、清晰度和文件名规则" data-en-alt="Screenshot of the Export window: a row for each of the six sizes, then format, scale and the file-name rule">
+        </picture>
+      </div>
+      <figcaption class="caption"><span data-l="zh">导出窗口（截图）：PNG、JPEG 或 WebP，1 到 4 倍清晰度，文件名用「序号」「频道」「标题」「尺寸」这些标签拼；⌘E 打开。</span><span data-l="en" lang="en">The Export window (screenshot): PNG, JPEG or WebP, 1× to 4×, file names built from chips such as number, channel, title and size; ⌘E opens it.</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ EP.07 AGENTS & CLI ============ -->
+<section class="section" id="agents" aria-labelledby="agents-h">
+  <div class="wrap">
+    <p class="tag"><span class="tag-ep">EP.07</span><span class="tag-name"><span data-l="zh">Agent 与命令行</span><span data-l="en" lang="en">Agents and the command line</span></span></p>
+    <h2 class="h2" id="agents-h"><span data-l="zh">让 <em>Claude Code</em> 替你做封面。</span><span data-l="en" lang="en">Let <em>Claude Code</em> make the cover.</span></h2>
+    <p class="lede"><span data-l="zh">桌面应用可以开一个 MCP 接口，Claude Code、Codex、Cursor 这类 agent 连进来，就在你开着的窗口里改文字、换风格、摆图层、出预览、导出。每一处改动你都看得到，每一处都是一步撤销。</span><span data-l="en" lang="en">The desktop app can open an MCP endpoint; agents such as Claude Code, Codex or Cursor connect and work in the window you have open — changing words and looks, placing layers, drawing previews, exporting. You see every change, and each is one step of undo.</span></p>
+    <div class="agents-grid">
+      <div class="term">
+        <div class="term-bar"><span>Claude Code</span><button type="button" class="copy" data-copy="mcp"><span data-l="zh">复制命令</span><span data-l="en">Copy</span></button></div>
+<pre><span class="p">$ </span><span id="mcp">claude mcp add --transport http --scope user smedcover http://127.0.0.1:25277/mcp</span>
+
+<span class="c"># <span data-l="zh">然后在 Claude Code 里说：</span><span data-l="en">then ask Claude Code:</span></span>
+<span class="p">› </span><span class="say"><span data-l="zh">做这周的封面：标题《雨夜东京漫步》，用夜景风格，给我看个预览。</span><span data-l="en">Make this week's cover: the title “Rainy Tokyo night walk”, in a night look, and show me a preview.</span></span></pre>
+      </div>
+      <div class="term">
+        <div class="term-bar"><span>smedcover<span class="soon" data-since="0.5.0" hidden></span></span><button type="button" class="copy" data-copy="cli"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div>
+<pre id="cli"><span class="p">$ </span>smedcover export --channels all --sizes all --out covers
+<span class="p">$ </span>smedcover batch episodes.csv --sizes 16:9 --out covers
+<span class="p">$ </span>smedcover render SHOT --size 3:4 -o cover.png
+<span class="p">$ </span>smedcover --json export --channels all | jq -r '.files[].path'</pre>
+      </div>
+    </div>
+    <ul class="points" role="list">
+      <li><b><span data-l="zh">只在这台电脑上</span><span data-l="en" lang="en">This computer only</span></b><span data-l="zh">接口只在 127.0.0.1 上监听，不接受其他电脑和网页的请求；需要时打开「要求令牌」。</span><span data-l="en" lang="en">The endpoint listens on 127.0.0.1 and refuses other computers and web pages; turn on <i>Require a token</i> when you need it.</span></li>
+      <li><b><span data-l="zh">看得见，撤得回</span><span data-l="en" lang="en">Watch it, undo it</span></b><span data-l="zh">调用一个接一个执行，你正在操作时它会等你；它做的每一步都在窗口的撤销历史里。</span><span data-l="en" lang="en">Calls run one at a time and wait while you're busy; every step it takes is in the window's undo history.</span></li>
+      <li><b><span data-l="zh">脚本里也能用</span><span data-l="en" lang="en">In scripts too</span></b><span data-l="zh">命令行 <code>smedcover</code> 调用的就是 agent 用的工具：应用开着就在那个窗口里做，没开就为这一次启动它。</span><span data-l="en" lang="en">The <code>smedcover</code> command calls the same tools the agents use: with SmedCover open it works in that window; otherwise it starts SmedCover for the run.</span></li>
+    </ul>
+    <figure class="shot agents-shot reveal">
+      <div class="frame-img"><img src="assets/img/rel/agents-960.webp" srcset="assets/img/rel/agents-960.webp 960w, assets/img/rel/agents-1560.webp 1560w" sizes="(max-width: 1290px) 96vw, 1240px" width="1560" height="950" loading="lazy" decoding="async" alt="设置窗口的「Agent 接入」页：开启 MCP 接口、要求令牌，以及给 Claude Code、Codex 复制的配置" data-en-alt="The Agents page in Settings: the MCP endpoint switch, Require a token, and the lines to copy for Claude Code and Codex"></div>
+      <figcaption class="caption"><span data-l="zh">设置 → Agent 接入（截图，取自 v0.4.0 的发布说明）。各个客户端怎么配、全部工具和排错，见仓库里的 README_MCP。</span><span data-l="en" lang="en">Settings → Agents (screenshot from the v0.4.0 release notes). Setting up each client, every tool and troubleshooting: README_MCP in the repository.</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ RELEASES ============ -->
+<section class="section" id="releases" aria-labelledby="rel-h">
+  <div class="wrap releases-grid">
+    <div class="releases-side">
+      <p class="tag"><span class="tag-ep">NEW</span><span class="tag-name"><span data-l="zh">发布</span><span data-l="en" lang="en">Releases</span></span></p>
+      <h2 class="h2" id="rel-h"><span data-l="zh">每一版<em>改了什么</em>。</span><span data-l="en" lang="en">What <em>changed</em>, release by release.</span></h2>
+      <p class="note" id="rel-source"></p>
+      <p class="note"><a href="https://github.com/cybertheye/smedcover/releases" rel="noopener"><span data-l="zh">GitHub 上的全部发布</span><span data-l="en" lang="en">All releases on GitHub</span></a> · <a href="https://github.com/cybertheye/smedcover/releases.atom" rel="noopener"><span data-l="zh">订阅（Atom）</span><span data-l="en" lang="en">Subscribe (Atom)</span></a></p>
+    </div>
+    <div class="rel-list" id="rel-list">
+      <div class="skeleton" aria-hidden="true"></div>
+      <noscript><p class="rel-empty">需要 JavaScript 显示更新记录。也可以直接去 <a href="https://github.com/cybertheye/smedcover/releases">GitHub Releases</a> 查看。</p></noscript>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DOWNLOAD ============ -->
+<section class="section download" id="download" aria-labelledby="dl-h">
+  <div class="dl-panel">
+    <div class="dl-block" aria-hidden="true">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        <polygon points="30,0 100,0 100,100 6,100" fill="#0b0b11"/>
+        <line x1="25.5" y1="0" x2="1.5" y2="100" stroke="#ffffff" stroke-width="3" vector-effect="non-scaling-stroke"/>
+      </svg>
+    </div>
+    <div class="wrap dl-main">
+      <div>
+        <p class="tag"><span class="tag-ep">GET</span><span class="tag-name"><span data-l="zh">下载</span><span data-l="en" lang="en">Download</span></span></p>
+        <h2 class="h2" id="dl-h"><span data-l="zh">下载 SmedCover</span><span data-l="en" lang="en">Download SmedCover</span></h2>
+        <div id="dl-primary">
+          <div class="dl-buttons"><a class="btn" href="https://github.com/cybertheye/smedcover/releases/latest" rel="noopener"><span data-l="zh">到 GitHub 下载</span><span data-l="en" lang="en">Download on GitHub</span><small>macOS · Windows · Linux</small></a></div>
+        </div>
+        <div class="dl-phone" id="dl-phone" hidden>
+          <span><span data-l="zh">SmedCover 是电脑上用的应用（macOS、Windows、Linux）。到电脑上打开这个页面下载，或者先把链接存下来：</span><span data-l="en" lang="en">SmedCover runs on a computer (macOS, Windows, Linux). Open this page there to download it, or keep the link for later:</span></span>
+          <button type="button" id="copy-link"><span data-l="zh">复制链接</span><span data-l="en">Copy link</span></button>
+        </div>
+      </div>
+      <p class="dl-ver" id="dl-ver" aria-hidden="true">v—<small></small></p>
+    </div>
+  </div>
+
+  <div class="wrap dl-body">
+    <div>
+      <h3><span data-l="zh">全部安装包</span><span data-l="en" lang="en">Every installer</span></h3>
+      <div class="source" id="source" hidden>
+        <span><span data-l="zh">下载源</span><span data-l="en" lang="en">Download from</span></span>
+        <div class="seg" role="radiogroup" aria-label="下载源" data-en-aria-label="Download source">
+          <button type="button" role="radio" aria-checked="true" data-src="mirror"><span data-l="zh">国内镜像</span><span data-l="en">China mirror</span></button>
+          <button type="button" role="radio" aria-checked="false" data-src="github">GitHub</button>
+        </div>
+      </div>
+      <div class="files" id="files"><p class="note"><span data-l="zh">正在读取安装包列表…</span><span data-l="en" lang="en">Reading the list of installers…</span></p></div>
+      <p class="build-note"><span data-l="zh">想从源码构建：需要 Rust、Node.js 和 Tauri 的依赖，步骤见</span><span data-l="en" lang="en">To build from source you need Rust, Node.js and Tauri's prerequisites; see</span> <a href="https://github.com/cybertheye/smedcover#readme" rel="noopener">README</a>.</p>
+    </div>
+
+    <div class="tabs" id="install-help">
+      <h3><span data-l="zh">安装遇到提示？</span><span data-l="en" lang="en">Warned when installing?</span></h3>
+      <div role="tablist" aria-label="系统" data-en-aria-label="System">
+        <button type="button" role="tab" id="tab-mac" aria-controls="panel-mac" aria-selected="true">macOS</button>
+        <button type="button" role="tab" id="tab-win" aria-controls="panel-win" aria-selected="false" tabindex="-1">Windows</button>
+        <button type="button" role="tab" id="tab-linux" aria-controls="panel-linux" aria-selected="false" tabindex="-1">Linux</button>
+      </div>
+      <div role="tabpanel" id="panel-mac" aria-labelledby="tab-mac" tabindex="0">
+        <ol class="steps">
+          <li><span data-l="zh">打开下载的 <b>.dmg</b>，把 SmedCover 拖进「应用程序」文件夹。</span><span data-l="en" lang="en">Open the <b>.dmg</b> and drag SmedCover into Applications.</span></li>
+          <li><span data-l="zh">第一次打开时，如果提示<b>「无法打开」或「无法验证开发者」</b>：先关掉提示，打开 <span class="path">系统设置 → 隐私与安全性</span>，往下找到关于 SmedCover 的那一行，点<b>「仍要打开」</b>，再确认一次。（macOS 14 及更早，也可以在「应用程序」里按住 Control 点 SmedCover，选「打开」。）</span><span data-l="en" lang="en">If the first launch says it <b>can't be opened</b> or is from an <b>unidentified developer</b>: close the message, open <span class="path">System Settings → Privacy &amp; Security</span>, find the line about SmedCover further down, click <b>Open Anyway</b> and confirm. (On macOS 14 and earlier you can also Control-click SmedCover in Applications and choose Open.)</span></li>
+          <li><span data-l="zh">如果提示<b>「已损坏，无法打开」</b>：这是系统给下载的 App 加了隔离标记。打开「终端」，运行下面这行，再打开 SmedCover。</span><span data-l="en" lang="en">If it says the app is <b>damaged and can't be opened</b>, macOS has quarantined the download. Open Terminal, run this line, then open SmedCover again.</span>
+            <div class="code"><span id="xattr">xattr -dr com.apple.quarantine /Applications/SmedCover.app</span><button type="button" class="copy" data-copy="xattr"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div></li>
+        </ol>
+        <p class="why"><span data-l="zh">不知道选 Apple 芯片还是 Intel？点屏幕左上角的 Apple 菜单 →「关于本机」：「芯片」一栏写着 Apple M1、M2……就选 Apple 芯片；「处理器」写着 Intel 就选 Intel 版。</span><span data-l="en" lang="en">Apple silicon or Intel? Open the Apple menu → About This Mac: a <i>Chip</i> line reading Apple M1, M2… means Apple silicon; a <i>Processor</i> line reading Intel means Intel.</span></p>
+      </div>
+      <div role="tabpanel" id="panel-win" aria-labelledby="tab-win" tabindex="0">
+        <ol class="steps">
+          <li><span data-l="zh">一般下载 <b>-setup.exe</b> 安装程序，双击运行；<b>.msi</b> 适合需要统一部署的电脑。</span><span data-l="en" lang="en">Most people want the <b>-setup.exe</b> installer; double-click it. The <b>.msi</b> suits managed deployments.</span></li>
+          <li><span data-l="zh">如果出现蓝色的<b>「Windows 已保护你的电脑」</b>（SmartScreen）：点<b>「更多信息」</b>，再点<b>「仍要运行」</b>。</span><span data-l="en" lang="en">If a blue <b>“Windows protected your PC”</b> box (SmartScreen) appears, click <b>More info</b>, then <b>Run anyway</b>.</span></li>
+          <li><span data-l="zh">照提示装好，从开始菜单打开 SmedCover。第一次抠图前，在 <span class="path">⋯ → AI → 抠图</span> 里下载一次 BiRefNet 模型。</span><span data-l="en" lang="en">Finish the installer and open SmedCover from the Start menu. Before the first cut-out, download the BiRefNet model once under <span class="path">⋯ → AI → Cut-out</span>.</span></li>
+        </ol>
+      </div>
+      <div role="tabpanel" id="panel-linux" aria-labelledby="tab-linux" tabindex="0">
+        <ol class="steps">
+          <li><b>AppImage</b> · <span data-l="zh">加上可执行权限，直接运行：</span><span data-l="en" lang="en">make it executable and run it:</span>
+            <div class="code"><span id="appimage">chmod +x SmedCover_*_amd64.AppImage && ./SmedCover_*_amd64.AppImage</span><button type="button" class="copy" data-copy="appimage"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div></li>
+          <li><b>.deb</b> · Debian / Ubuntu：
+            <div class="code"><span id="deb">sudo apt install ./SmedCover_*_amd64.deb</span><button type="button" class="copy" data-copy="deb"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div></li>
+          <li><b>.rpm</b> · Fedora <span data-l="zh">等</span><span data-l="en">and others</span>：
+            <div class="code"><span id="rpm">sudo dnf install ./SmedCover-*.x86_64.rpm</span><button type="button" class="copy" data-copy="rpm"><span data-l="zh">复制</span><span data-l="en">Copy</span></button></div></li>
+        </ol>
+        <p class="why"><span data-l="zh">第一次抠图前，在 <span class="path">⋯ → AI → 抠图</span> 里下载一次 BiRefNet 模型。</span><span data-l="en" lang="en">Before the first cut-out, download the BiRefNet model once under <span class="path">⋯ → AI → Cut-out</span>.</span></p>
+      </div>
+      <p class="why"><span data-l="zh">为什么会被拦：SmedCover 的安装包目前还没有做代码签名，所以 macOS 和 Windows 第一次打开时会提醒一下。请只从这个页面或 GitHub Releases 下载。</span><span data-l="en" lang="en">Why the warning: SmedCover's installers aren't code-signed yet, so macOS and Windows ask once before the first launch. Download only from this page or GitHub Releases.</span></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="wordmark" aria-hidden="true">SMEDCOVER</p>
+    <div class="foot-grid">
+      <div>
+        <h3><span data-l="zh">许可</span><span data-l="en" lang="en">Licence</span></h3>
+        <p><span data-l="zh">程序以 GNU AGPL v3 或更高版本发布；内置的频道图形、贴纸和色块形状另以 CC BY 4.0 许可。<b>用 SmedCover 做的封面无需署名</b>，商用也可以。</span><span data-l="en" lang="en">The program is under the GNU AGPL v3 or later; its built-in channel graphics, stickers and block shapes are also under CC BY 4.0. <b>Covers you make with SmedCover need no attribution</b>, commercial use included.</span></p>
+      </div>
+      <div>
+        <h3><span data-l="zh">项目</span><span data-l="en" lang="en">Project</span></h3>
+        <ul role="list">
+          <li><a href="https://github.com/cybertheye/smedcover" rel="noopener">GitHub</a></li>
+          <li><a href="https://github.com/cybertheye/smedcover/blob/general/README.zh-CN.md" rel="noopener"><span data-l="zh">使用说明（中文）</span><span data-l="en" lang="en">Guide (Chinese)</span></a></li>
+          <li><a href="https://github.com/cybertheye/smedcover/blob/general/README.md" rel="noopener"><span data-l="zh">使用说明（英文）</span><span data-l="en" lang="en">Guide (English)</span></a></li>
+          <li><a href="https://github.com/cybertheye/smedcover/issues" rel="noopener"><span data-l="zh">反馈问题</span><span data-l="en" lang="en">Report an issue</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h3><span data-l="zh">本页</span><span data-l="en" lang="en">This page</span></h3>
+        <ul role="list">
+          <li><a href="#releases"><span data-l="zh">更新记录</span><span data-l="en" lang="en">Releases</span></a></li>
+          <li><a href="#download"><span data-l="zh">下载</span><span data-l="en" lang="en">Download</span></a></li>
+          <li><span data-l="zh">本页的封面图都由 SmedCover 渲染，截图来自应用本身。</span><span data-l="en" lang="en">Every cover here was rendered by SmedCover; the screenshots are of the app itself.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-fine">
+      <span>© 2026 cybertheye</span>
+      <span><span data-l="zh">本页按 SmedCover 的默认风格「赛璐珞」排版。</span><span data-l="en" lang="en">This page is set in SmedCover's default look, Cel.</span></span>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
